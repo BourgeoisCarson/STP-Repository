@@ -1,0 +1,237 @@
+﻿@model SocomTrainingPlatform.Models.SiteModels.AddSiteVm
+
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/AdminLayout/_Layout.cshtml";
+}
+<style>
+    fieldset[disabled] {
+        display: none
+    }
+</style>
+<div class="card card-primary" style="padding-top: 10px">
+    <div class="card-body">
+       <div class="form-group">
+        <h4>Add new site</h4>
+      </div>
+        <form asp-action="Create" style="background-color: white">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="Name" class="control-label"></label>
+                        <input asp-for="Name" class="form-control" />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Add Location:</label>
+                        <input class="form-control" id="txtLocation" autocomplete="off" />
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 form-group">
+                            <label asp-for="StreetAddress" class="control-label"></label>
+                            <input asp-for="StreetAddress" class="form-control" id="StreetAddress" autocomplete="off" />
+                            <span asp-validation-for="StreetAddress" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label asp-for="City" class="control-label"></label>
+                            <input asp-for="City" class="form-control" id="City" autocomplete="off" />
+                            <span asp-validation-for="City" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 form-group">
+                            <label asp-for="State" class="control-label"></label>
+                            <input asp-for="State" class="form-control" id="State" autocomplete="off" />
+                            <span asp-validation-for="State" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label asp-for="ZipCode" class="control-label"></label>
+                            <input asp-for="ZipCode" class="form-control" id="Zip" autocomplete="off" />
+                            <span asp-validation-for="ZipCode" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 form-group">
+                            <label asp-for="Latitude" class="control-label"></label>
+                            <input asp-for="Latitude" class="form-control" id="Latitude" autocomplete="off" />
+                            <span asp-validation-for="Latitude" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label asp-for="Longitude" class="control-label"></label>
+                            <input asp-for="Longitude" class="form-control" id="Longitude" autocomplete="off" />
+                            <span asp-validation-for="Longitude" class="text-danger"></span>
+                        </div>
+                    </div>
+@*                    <div class="row">
+                        <div class="col-md-6 form-group">
+                            <label asp-for="Grid" class="control-label"></label>
+                            <input asp-for="Grid" class="form-control" />
+                            <span asp-validation-for="Grid" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <div class="form-group">
+                                <label for="exampleInputFile">Mou</label>
+                                <div class="input-group">
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" id="exampleInputFile">
+                                        <label class="custom-file-label" for="exampleInputFile">Choose file</label>
+                                    </div>
+                                    <div class="input-group-append">
+                                        <span class="input-group-text">Upload</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 form-group">
+                            <label asp-for="MouStartDate" class="control-label"></label>
+                            <input asp-for="MouStartDate" class="form-control" />
+                            <span asp-validation-for="MouStartDate" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label asp-for="MouEndDate" class="control-label"></label>
+                            <input asp-for="MouEndDate" class="form-control" />
+                            <span asp-validation-for="MouEndDate" class="text-danger"></span>
+                        </div>
+                    </div>*@
+                        </div>
+                        </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+<script src="~/plugins/bs-custom-file-input/bs-custom-file-input.min.js"></script>
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=false&libraries=places&key=AIzaSyDlAbZMZiUy1x15UbJfvZwg1zi6TNIh764"></script>
+<script type="text/javascript">    google.maps.event.addDomListener(window, 'load', function () {
+                var options = { componentRestrictions: { country: "us" } };
+                var places = new google.maps.places.Autocomplete(document.getElementById('txtLocation'), options);
+                google.maps.event.addListener(places, 'place_changed', function () {
+                    var address = '';
+                    var route = '';
+                    var postcode = '';
+                    var locality = '';
+                    var state = '';
+                    var country = '';
+                    var place = places.getPlace();
+                    var latitude = places.getPlace().geometry.location.lat();
+                    var longitude = places.getPlace().geometry.location.lng();;
+                    var AddressComponents = places.getPlace().address_components;
+                    for (var i = 0; i < AddressComponents.length; i++) {
+                        var componentType = AddressComponents[i].types[0];
+                        switch (componentType) {
+                            //For Street Number
+                            case "street_number": {
+                                address = `${AddressComponents[i].long_name} ${address}`;
+                                break;
+                            }
+                            //For Address
+
+                            case "route": {
+                                route = AddressComponents[i].short_name;
+                                break;
+                            }
+                            //For PinCode
+                            case "postal_code": {
+                                postcode = `${AddressComponents[i].long_name}${postcode}`;
+                                break;
+                            }
+                            //For PinCode
+                            case "postal_code_prefix": {
+                                if (postcode == '') {
+                                    postcode = AddressComponents[i].long_name;
+                                }
+                                break;
+                            }
+                            //For City
+
+                            case "locality": {
+                                locality = AddressComponents[i].long_name;
+                                break;
+                            }
+                            //For City
+                            case "administrative_area_level_2": {
+                                if (locality == '') {
+                                    locality = AddressComponents[i].long_name;
+                                }
+                                break;
+                            }
+                            //For State
+                            case "administrative_area_level_1": {
+                                state = AddressComponents[i].short_name;
+                                break;
+                            }
+                            //For Country
+
+                            case "country": {
+                                country = AddressComponents[i].long_name;
+                                break;
+                            }
+                        }
+                    }
+
+                    $('#StreetAddress').val(address + " " + route);
+                    $('#City').val(locality);
+                    $('#State').val(state);
+                    //$('#txtCountry').val(country);
+                    $('#Zip').val(postcode);
+                    $('#Latitude').val(latitude);
+                    $('#Longitude').val(longitude);
+
+
+                });
+
+            });</script>
+
+    @if (ViewBag.Message != null)
+    {
+<script type="text/javascript">
+    window.onload = function(){
+        alert("@ViewBag.Message");
+</script>
+    };
+
+<script>
+        (function () {
+    //Initialize Select2 Elements
+         $('.select2').select2()
+         })
+         (function () {
+             $('Select2').select2('data');
+         })
+</script>
+<script>
+    $("#choice").change(function(){
+  $("#A,#B,#C,#D,#E").hide();
+  if($(this).val() == "A"){
+    $("#A").show();
+  }
+  else if($(this).val() == "B"){
+    $("#B").show();
+  }
+  else if($(this).val() == "C"){
+    $("#C").show();
+  }
+  else if($(this).val() == "D"){
+    $("#D").show();
+  }
+  else if($(this).val() == "E"){
+    $("#E").show();
+  }
+});
+
+</script>
+}

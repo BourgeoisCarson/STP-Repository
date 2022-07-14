@@ -1,0 +1,150 @@
+﻿
+@model SocomTrainingPlatform.Models.ExcerciseModels.ExcerciseIndex
+
+@{
+    ViewData["Title"] = "Excercise";
+    Layout = "~/Views/Shared/AdminLayout/_Layout.cshtml";
+}
+
+<div class="row" style="padding-top: 15px">
+    <div class="form-group">
+        <a asp-action="CreateExcercise" class="btn btn-primary">Create New Exercise</a>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-2">
+    <form method="post" asp-action="Index" style="padding-top: 20px">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group">
+                        @Html.DropDownList("ExcerciseChoice", (IEnumerable<SelectListItem>)(ViewBag.ExcerciseTypes), "All Exercises", new { @class = "form-control" })
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" value="Filter" class="btn btn-primary" />
+                    </div>
+    </form>
+    </div>
+    <div class="col-md-10">
+        <div class="container-fluid py-4">
+            <div class="card">
+                <div class="card-header ui-sortable-handle border-0">
+                    <h3 class="card-title">All Exercises</h3>
+                    <div class="card-tools">
+                        <ul class="pagination pagination-sm">
+                            <li>
+                                <a href="#" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+                            @for (int i = 1; i <= Model.Pages; i++)
+                            {
+                                <li><a asp-Action="Index" asp-route-id="@i">@i</a></li>
+                            }
+                            <li>
+                                <a href="#" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                        </ul>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body table-responsive p-0" style="height: 600px;">
+                    <table class="table table-head-fixed text-nowrap">
+                        <thead>
+                            <tr>
+                                <th>Type</th>
+                                <th>Name</th>
+                                <th>Start Date</th>
+                                <th>End Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.SearchModel)
+                            {
+                                <tr>
+                                    <td>@item.ExcerciseType</td>
+                                    <td>
+                                        <a asp-action="Details" asp-route-id="@item.ExcerciseId">@item.ExcerciseName</a>
+                                    </td>
+                                    <td>@item.StartDate.ToString(string.Format("MM/dd/yyyy"))</td>
+                                    <td>@item.EndDate.ToString(string.Format("MM/dd/yyyy"))</td>
+                                </tr>
+
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+<script src="~/plugins/toastr/toastr.min.js"></script>
+<script src="~/plugins/sweetalert2/sweetalert2.min.js"></script>
+<script src="~/dist/js/demo.js"></script>
+<script>
+    $(function() {
+       var Toast = Swal.mixin({
+       toast: true,
+       position: 'top-end',
+       showConfirmButton: false,
+       timer: 3000
+    });
+
+    $('.swalDefaultSuccess').click(function() {
+      Toast.fire({
+      icon: 'success',
+      title: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
+      })
+     });
+    });
+</script>
+
+<script src='https://api.mapbox.com/mapbox-gl-js/v2.2.0/mapbox-gl.js'></script>
+<script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.7.0/mapbox-gl-geocoder.min.js"></script>
+<script>
+    mapboxgl.accessToken = 'pk.eyJ1IjoiY2Fyc29uYm91cmdlb2lzIiwiYSI6ImNrb2dpamRybzBuOHAycG85bTczZmVreTQifQ.htIKDF3etzcH0j0MN8VUJg';
+        var points = @ViewBag.geopoints;
+        var features = Array;
+
+        var geojson = {
+            "type": "FeatureCollection",
+            "features": [{
+                "properties": {},
+                "type": "Feature",
+                "geometry": {
+                    "type": "MultiPoint",
+                    "coordinates": [points]
+                }
+            }]
+        };
+
+        var map = new mapboxgl.Map({
+            container: 'map',
+            style: 'mapbox://styles/mapbox/streets-v11',
+            center: ['87', '13'],
+            zoom: 12,
+            });
+
+
+
+         var marker =  new mapboxgl.Marker(geojson)
+            .setLngLat(geojson.features.geometry.coordinates)
+            .addTo(map);
+                }
+
+</script>
+
+
+<script>
+    var stateOpt = @Html.Raw(Json.Serialize(ViewData["stateSearch"]));
+    var cityOpt = @Html.Raw(Json.Serialize(ViewData["citySearch"]));
+
+
+</script>
+}
+    

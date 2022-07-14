@@ -1,0 +1,104 @@
+﻿@model SocomTrainingPlatform.Models.ExcerciseModels.AddLocationVm
+
+@{
+    ViewData["Title"] = "Excercise Details Details";
+    Layout = "~/Views/Shared/AdminLayout/_Layout.cshtml";
+}
+
+<h2>Add a Site To Your Excercise</h2>
+
+<div class="col-md-10">
+        <div class="container-fluid py-4">
+        <h4 class="text-center text-uppercase"></h4>
+        <table class="table table-striped table-bordered">
+            <thead class="bg-dark text-white">
+                <tr>
+                    <th>Location Name</th>
+                </tr>
+            </thead>
+            <tbody>
+                    <tr>
+                        <td>
+                            <select id="locChoice">                      
+                            @foreach (var item in Model.Locations)
+                            {         
+                                 <option>@item</option>            
+                            }
+                            </select>
+                        </td>
+                    </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<div class="form-group">
+    <form method="post" asp-action="AddLocation" style="padding-top: 20px">
+        <h4>Add Dates Site Will be Used</h4>
+        <row>
+            <div class="form-group col-md-6">
+                <label>Start Date</label>
+                <input asp-for="StartDate" class="form-control" />
+                <span asp-validation-for="StartDate" class="text-danger"></span>
+            </div>
+            <div class="form-group col-md-6">
+                <label>End Date</label>
+                <input asp-for="EndDate" class="form-control" />
+                <span asp-validation-for="EndDate" class="text-danger"></span>
+            </div>
+            <input type="hidden" asp-for="LocationId" id="LocChoice"/> 
+        </row>
+    </form>
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script src="~/plugins/jquery-ui/jquery-ui.min.js"></script>
+    <script src="~/plugins/moment/moment.min.js"></script>
+
+    <script>
+        
+    </script>
+
+
+        <script>
+    $("#choice").change(function(){
+  $("#A,#B,#C,#D,#E").hide();
+  if($(this).val() == "A"){
+    $("#A").show();
+  }
+  else if($(this).val() == "B"){
+    $("#B").show();
+  }
+  else if($(this).val() == "C"){
+    $("#C").show();
+  }
+  else if($(this).val() == "D"){
+    $("#D").show();
+  }
+  else if($(this).val() == "E"){
+    $("#E").show();
+  }
+});
+
+</script>
+<script>
+   var choice = 0;
+    $('#NewPoc').click(function() {
+        $('#exspoc').hide();
+        $('#newpoc').show();
+        $('#Id').val(1);
+    });
+    $('#ExsistingPoc').click(function() {
+        $('#newpoc').hide();
+        $('#exspoc').show();
+        $("#Id").val(2);
+    });   
+
+</script>
+
+
+    }

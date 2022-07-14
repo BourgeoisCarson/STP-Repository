@@ -1,0 +1,42 @@
+﻿@model SocomTrainingPlatform.Models.ExcerciseModels.AddExcerciseTypeVm
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/AdminLayout/_Layout.cshtml";
+}
+
+<h2>Create Exccercise Type</h2>  
+ <form asp-action="AddExcerciseType" style="background-color: white">
+   <div asp-validation-summary="ModelOnly" class="text-danger"></div> 
+    @Html.AntiForgeryToken()  
+    <div class="form-horizontal">  
+        <h4>Create New Excercise Type</h4>  
+        <hr />  
+        @Html.ValidationSummary(true)
+        <div class="form-group">  
+            @Html.LabelFor(model => model.OrgChoice, new { @class = "control-label col-md-2" })  
+            <div class="col-md-10">  
+                @Html.DropDownListFor(model => model.OrgChoice, Model.Organizations)  
+                @Html.ValidationMessageFor(model => model.ExcerciseName)  
+            </div>  
+        </div>  
+        <div class="form-group">  
+            @Html.LabelFor(model => model.ExcerciseName, new { @class = "control-label col-md-2" })  
+            <div class="col-md-10">  
+                @Html.TextBoxFor(model => model.ExcerciseName)  
+                @Html.ValidationMessageFor(model => model.ExcerciseName)  
+            </div>  
+        </div>  
+        <div class="form-group">  
+            @Html.LabelFor(model => model.ExcerciseDescription, new { @class = "control-label col-md-2" })  
+            <div class="col-md-10">  
+                @Html.TextBoxFor(model => model.ExcerciseDescription)  
+                @Html.ValidationMessageFor(model => model.ExcerciseDescription)  
+            </div>  
+        </div>  
+        <div class="form-group">  
+            <div class="col-md-offset-2 col-md-10">  
+                <input type="submit" name="submit" value="Finish" class="btn btn-default" />  
+            </div>  
+        </div>  
+    </div>  
+   </form>

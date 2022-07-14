@@ -1,0 +1,69 @@
+﻿@model SocomTrainingPlatform.Models.ExcerciseModels.AddExcerciseVm
+
+@{
+    Layout = "~/Views/Shared/AdminLayout/_Layout.cshtml";
+}
+
+<div>
+    <h1>Create a New Exercise</h1>
+</div>
+<div class="col-md-6">
+    <div class="card card-primary" style="padding-top: 10px">
+        <div class="card-body">
+            <form asp-action="CreateExcercise" style="background-color: white">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label>Exercise Type</label>
+                    @Html.DropDownListFor(model => model.TypeChoice, Model.TypeList)
+                    <span asp-validation-for="TypeChoice" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label>Exercise Name</label>
+                    <input asp-for="ExcerciseName" class="form-control" />
+                    <span asp-validation-for="ExcerciseName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label>Start Date</label>
+                    <input asp-for="StartDate" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label>Start Date</label>
+                    <input asp-for="EndDate" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Create" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="~/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
+
+    <script>
+     $(function () {
+                 //Datemask dd/mm/yyyy
+    $('#datemask').inputmask('dd/mm/yyyy', { 'placeholder': 'dd/mm/yyyy' })
+    //Datemask2 mm/dd/yyyy
+    $('#datemask2').inputmask('mm/dd/yyyy', { 'placeholder': 'mm/dd/yyyy' })
+    //Money Euro
+    $('[data-mask]').inputmask()
+
+    //Date picker
+    $('#reservationdate').datetimepicker({
+        format: 'L'
+    });
+     })
+    </script>
+
+    <script>
+        $(function () {
+                $('#datetimepicker4').datetimepicker({
+                    format: 'L'
+                });
+            });
+    </script>
+
+}

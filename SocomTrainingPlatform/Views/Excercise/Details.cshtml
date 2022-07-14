@@ -1,0 +1,393 @@
+﻿@model SocomTrainingPlatform.Models.ExcerciseModels.ExcerciseDetailsVm
+@{
+    ViewData["Title"] = "Excercise Details Details";
+    Layout = "~/Views/Shared/AdminLayout/_Layout.cshtml";
+}
+
+<div class="container-fluid py-4" style="background-color:white; box-shadow: 0 4px 2px -2px gray">
+    <div class="row">
+        <div class="col-md-4">
+            <h3 class="align-content-center">@Html.DisplayFor(model => model.Excercise.TypeName)</h3>
+            <h5 class="align-content-center">@Html.DisplayFor(model => model.ExcerciseType)</h5>
+        </div>
+        <div style="padding-right: 10px">
+            <h5>@Model.Excercise.StartDate.ToString(string.Format("dd/MM/yyyy")) - @Model.Excercise.EndDate.ToString(string.Format("dd/MM/yyyy"))</h5>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid py-4">
+    <div class="row">
+        <div class="container-fluid col-md-8">
+            <div class="card">
+                <div class="card-header border-0">
+                    <h3 class="card-title">Support Documents</h3>
+                    <div class="card-tools">
+                        <a href="#" class="btn btn-tool btn-sm" data-toggle="modal" data-target="#modal-doc">
+                            <i class="fas fa-plus"></i>
+                        </a>
+                    </div>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body table-responsive p-0" style="height: 300px;">
+                    <table class="table table-head-fixed text-nowrap">
+                        <thead>
+                            <tr>
+                                <th>File Name</th>
+                                <th>Upload Date</th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                                @if (Model.Docs != null)
+                                {
+                                    @foreach (var item in Model.Docs)
+                                    {
+                                        <tr>
+                                        <td>
+                                            @item.FileName
+                                        </td>
+                                        <td>
+                                            @item.UploadDate.ToString(string.Format("MM/dd/yyyy"))
+                                        </td>
+                                        <td>
+                                            <button type="button" supid="supid" class="btn btn-dark" data-id="@item.Id">Open Document</button>
+                                        </td>
+                                        @*<td>
+                                            <form asp-page-handler="Download" method="post" asp-route-id="@item.Id, @Model.Excercise.Id">
+                                                <input type="submit" class="btn btn-dark" value="Download">
+                                            </form>
+                                        </td>*@
+                                        <td>
+                                            @*<form asp-page-handler="Delete" method="post" asp-route-id="@item.Id">*@
+                                                <input type="submit" class="btn btn-danger" value="Delete">
+                                        </td>
+                                        </tr>
+                                    }
+                                }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header border-0">
+                    <h3 class="card-title">Breifs</h3>
+                    <div class="card-tools">
+                        <a href="#" class="btn btn-tool btn-sm" data-toggle="modal" data-target="#modal-brief">
+                            <i class="fas fa-plus"></i>
+                        </a>
+                    </div>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body table-responsive p-0" style="height: 300px;">
+                    <table class="table table-head-fixed text-nowrap">
+                        <thead>
+                            <tr>
+                                <th>File Name</th>
+                                <th>Upload Date</th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                                @if (Model.Docs != null)
+                                {
+                                    @foreach (var item in Model.Briefs)
+                                    {
+                                     <tr>
+                                        <td>
+                                            @item.FileName
+                                        </td>
+                                        <td>
+                                            @item.UploadDate.ToString(string.Format("MM/dd/yyyy"))
+                                        </td>
+                                        <td>
+                                            <button type="button" breifid="breifid" class="btn btn-dark" data-id="@item.Id">Open Document</button>
+                                        </td>
+                                        <td>
+                                            <form asp-page-handler="Delete" method="post" asp-route-id="@item.Id">
+                                                <input type="submit" class="btn btn-danger" value="Delete">
+                                            </form>
+                                        </td>
+                                        </tr>
+                                    }                                   
+                                }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header border-0">
+                    <h3 class="card-title">Notes</h3>
+                    <div class="card-tools">
+                        <a href="#" class="btn btn-tool btn-sm" data-toggle="modal" data-target="#modal-note">
+                            <i class="fas fa-plus"></i>
+                        </a>
+                     </div>
+                 </div>
+                <!-- /.card-header -->
+                <div class="card-body">
+                    <row>
+                        @if (Model.Notes != null)
+                        {
+                            @foreach (var item in Model.Notes)
+                            {
+                                <strong>@item.DateStamp.ToString(string.Format("MM/dd/yyyy"))</strong>
+                                <h6>@item.Subject.ToString()</h6>
+                                <p>@item.Body.ToString()</p>
+                                <hr>
+                            }
+                        }
+                    </row>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header border-0">
+                    <h3 class="card-title">Locations</h3>
+                    <div class="card-tools">
+                        <a href="#" class="btn btn-tool btn-sm" data-toggle="modal" data-target="#modal-location">
+                            <i class="fas fa-plus"></i>
+                        </a>
+                     </div>
+                 </div>
+                <!-- /.card-header -->
+                <div class="card-body" style="height: 300px;">
+                    <row>
+                        @if (Model.Locations != null)
+                        {
+                            @foreach (var item in Model.Locations)
+                            {
+                                <strong><a asp-controller="Site" asp-action="Details" asp-route-id="@item.Id">@item.Name</a></strong>
+                                @*<a  asp-action="UpdateLocation" asp-route-id="@item.Id">
+                                  <i class="fa fa-plus"></i>
+                                 </a>*@
+                                <hr>
+                            }
+                        }
+                    </row>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modal-doc">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Add New SUpport Document</h4>
+                <button class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form enctype="multipart/form-data" method="post" asp-action="UploadSupDoc" asp-route-id="@Model.Excercise.Id">
+                <div class="modal-body">
+                        <div class="form-group">
+                            <label>File Name</label>
+                            <input asp-for="@Model.FileName" />
+                        </div>
+                        <div class="form-group">
+                            <label>Choose File</label>
+                            <input asp-for="@Model.file" class="form-control" accept=".pdf" type="file" />
+                        </div>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <input type="submit" value="Submit" />
+                </div>
+            </form>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<div class="modal fade" id="modal-brief">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Add New Brief File</h4>
+                <button class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form enctype="multipart/form-data" method="post" asp-action="UploadBrief" asp-route-id="@Model.Excercise.Id">
+                <div class="modal-body">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>File Name</label>
+                            <input asp-for="@Model.FileName" />
+                        </div>
+                        <div class="form-group">
+                            <label>Choose File</label>
+                            <input asp-for="@Model.file" class="form-control" accept=".pdf" type="file" />
+                        </div>
+                </div>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <input type="submit" value="Submit" />
+                </div>
+            </form>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<div class="modal fade" id="modal-location">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Add Location</h4>
+                <button class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form method="post" asp-action="AddLocation" asp-route-id="@Model.Excercise.Id">
+                <div class="modal-body">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>Choose Location</label>
+                            <select asp-for="LocationChoice" class="form-control"  asp-items="ViewBag.SelectLocations"></select>
+                        </div>
+                </div>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <input type="submit" value="Submit" />
+                </div>
+            </form>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<div class="modal fade" id="modal-note">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Add Note</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form method="post" asp-action="CreateNote" asp-route-id="@Model.Excercise.Id">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Subject</label>
+                        <input asp-for="NoteSubject" />
+                        <span asp-validation-for="NoteSubject" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <textarea class="form-control" asp-for="NoteBody" rows="3" placeholder="Enter ..."></textarea>
+                        <span asp-validation-for="NoteBody" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <input type="submit" value="Submit" />
+                </div>
+            </form>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+
+<script src='https://api.mapbox.com/mapbox-gl-js/v2.2.0/mapbox-gl.js'></script>
+<script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.7.0/mapbox-gl-geocoder.min.js"></script>
+<script src="~/plugins/jquery-ui/jquery-ui.min.js"></script>
+<script src="~/plugins/moment/moment.min.js"></script>
+<script src="~/plugins/fullcalendar/main.js"></script>
+
+<script>
+    mapboxgl.accessToken = 'pk.eyJ1IjoiY2Fyc29uYm91cmdlb2lzIiwiYSI6ImNrb2dpamRybzBuOHAycG85bTczZmVreTQifQ.htIKDF3etzcH0j0MN8VUJg';
+
+
+
+            var map = new mapboxgl.Map({
+                container: 'map',
+                style: 'mapbox://styles/mapbox/streets-v11',
+                center: [@ViewBag.Long, @ViewBag.Lat],
+                zoom: 12,
+
+            });
+            var marker = new mapboxgl.Marker()
+                .setLngLat([@ViewBag.Long, @ViewBag.Lat])
+                .addTo(map);</script>
+
+<script>
+
+    document.addEventListener('DOMContentLoaded', function() {
+      var calendarEl = document.getElementById('calendar');
+      var calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth'
+      });
+      calendar.render();
+    });
+
+</script>
+<script>
+    $(function () {
+        //Initialize Select2 Elements
+        $('.select2').select2()
+        $('#reservation').daterangepicker();
+        $('form').submit(function (ev, picker) {
+        [startDate, endDate] = $('.date_range').val().split(' - ');
+        $(this).find('input[name="start_date"]').val(startDate);
+        $(this).find('input[name="end_date"]').val(endDate);
+        });
+</script>
+
+<script>
+        $("#choice").change(function(){
+      $("#A,#B,#C,#D,#E").hide();
+      if($(this).val() == "A"){
+        $("#A").show();
+      }
+      else if($(this).val() == "B"){
+        $("#B").show();
+      }
+      else if($(this).val() == "C"){
+        $("#C").show();
+      }
+      else if($(this).val() == "D"){
+        $("#D").show();
+      }
+      else if($(this).val() == "E"){
+        $("#E").show();
+      }
+    });
+
+</script>
+<script>
+    var choice = 0;
+     $('#NewPoc').click(function() {
+         $('#exspoc').hide();
+         $('#newpoc').show();
+         $('#Id').val(1);
+     });
+     $('#ExsistingPoc').click(function() {
+         $('#newpoc').hide();
+         $('#exspoc').show();
+         $("#Id").val(2);
+     });
+
+</script>
+<script>
+        $("button").click(function () {
+         if($(this).attr('supid') == "supid")
+         {
+           var id = $(this).attr('data-id');
+           window.open("/Excercise/ShowSupportFile/" + id, "_blank");
+         }
+         else if($(this).attr('breifid') == "breifid")
+         {
+             var id = $(this).attr('data-id');
+           window.open("/Excercise/ShowBreifFile/" + id, "_blank");
+         }
+
+    });
+</script>
+}
