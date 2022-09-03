@@ -1,64 +1,119 @@
-﻿@model SocomTrainingPlatform.Models.Mou
+﻿@model SocomTrainingPlatform.Models.MouModels.MouDetailsVm
 
 @{
     ViewData["Title"] = "Details";
 }
-
-<h1>Details</h1>
-
-<div>
-    <h4>Mou</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.MouFile)
-        </dt>
-        <dd class="col-sm-10">
-            <button type="button" supid="supid" class="btn btn-dark" data-id="@Model.Id">Open Document</button>
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.StartDate)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.StartDate)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.EndDate)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.EndDate)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Title)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Title)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.FirstName)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.FirstName)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.lastName)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.lastName)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Email)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Email)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.PhoneNumber)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.PhoneNumber)
-        </dd>
-    </dl>
+<div class="row" style="padding-top: 15px;">
+    <div class="col-md-8">
+        <div class="card" style="padding-top:15px;">
+            <div class="card-header border-0">
+                <h3 class="card-title">MOU Details</h3>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body" style="height: 650px;">
+                <dl class="row">
+                    <dt class="col-sm-2">
+                        File Name
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.Title)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.MouFile)
+                    </dt>
+                    <dd class="col-sm-10">
+                        <button type="button" supid="supid" class="btn btn-dark" data-id="@Model.Id">Open Document</button>
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.StartDate)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.StartDate)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.EndDate)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.EndDate)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.Title)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.Title)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.FirstName)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.FirstName)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.lastName)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.lastName)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.Email)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.Email)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.PhoneNumber)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.PhoneNumber)
+                    </dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card" style="padding-top:15px;">
+            <div class="card-header border-0">
+                <h3 class="card-title">Associated Locations</h3>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body" style="height: 300px;">
+                <row>
+                    @if (Model.Locations != null)
+                    {
+                        @foreach (var item in Model.Locations)
+                        {
+                            <strong><a asp-controller="Site" asp-action="Details" asp-route-id="@item.Id">@item.Name</a></strong>
+                            @*<a  asp-action="UpdateLocation" asp-route-id="@item.Id">
+                                 <i class="fa fa-plus"></i>
+                                </a>*@
+                            <hr>
+                        }
+                    }
+                </row>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header border-0">
+                <h3 class="card-title">Associated Exercises</h3>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body" style="height: 300px;">
+                <row>
+                    @if (Model.Exccercises != null)
+                    {
+                        @foreach (var item in Model.Exccercises)
+                        {
+                            <strong><a asp-controller="Excercise" asp-action="Details" asp-route-id="@item.Id">@item.ExcerciseType - @item.TypeName</a></strong>
+                            @*<a  asp-action="UpdateLocation" asp-route-id="@item.Id">
+                                 <i class="fa fa-plus"></i>
+                                </a>*@
+                            <hr>
+                        }
+                    }
+                </row>
+            </div>
+        </div>
+    </div>
 </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
@@ -68,11 +123,10 @@
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     <script>
         $("button").click(function () {
-         if($(this).attr('supid') == "supid")
-         {
-           var id = $(this).attr('data-id');
-           window.open("/Mou/ShowFile/" + id, "_blank");
-         }
+            if ($(this).attr('supid') == "supid") {
+                var id = $(this).attr('data-id');
+                window.open("/Mou/ShowFile/" + id, "_blank");
+            }
         });
     </script>
 }

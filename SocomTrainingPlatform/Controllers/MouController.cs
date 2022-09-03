@@ -38,7 +38,7 @@ namespace SocomTrainingPlatform.Controllers
             return View(mous);
         }
 
-        public async Task<ActionResult<FileContentResult>> ShowFile(int id)
+        public FileContentResult ShowFile(int id)
         {
             var mou = _context.Mous.FirstOrDefault(m => m.Id == id);
 
@@ -64,14 +64,44 @@ namespace SocomTrainingPlatform.Controllers
                     mou.File = new FormFile(ms, 0, ms.Length, mou.Title, mou.FileType);
                 }
 
-
-
             if (mou == null)
             {
                 return NotFound();
             }
 
-            return View(mou);
+            var locations = new List<Location>();
+            var excercises = new List<Excercise>();
+
+            if(await _context.Locations.FirstOrDefaultAsync(l => l.MouId == mou.Id) != null)
+            {
+                locations = await _context.Locations.Where(l => l.MouId == mou.Id).ToListAsync();
+            }
+            if (await _context.MouExcercises.FirstOrDefaultAsync(l => l.MouId == mou.Id) != null)
+            {
+                var mouExcercise = await _context.MouExcercises.Where(l => l.MouId == mou.Id).ToListAsync();
+
+                foreach (var item in mouExcercise)
+                {
+                    excercises.Add(await _context.Excercises.FirstOrDefaultAsync(e => e.Id == item.ExcerciseId));
+                }
+            }
+
+            var mouDetails = new MouDetailsVm()
+            {
+                Locations = locations,
+                Exccercises = excercises,
+                File = mou.File,
+                Id = mou.Id,
+                Title = mou.Title,
+                StartDate = mou.StartDate,
+                EndDate = mou.EndDate,
+                PhoneNumber = mou.PhoneNumber,
+                FirstName = mou.FirstName,
+                lastName = mou.lastName,
+                Email = mou.Email,
+            };
+
+            return View(mouDetails);
         }
 
         // GET: Mous/Create
@@ -99,6 +129,7 @@ namespace SocomTrainingPlatform.Controllers
                     }
                 }
 
+                newMou.Id = mou.Id;
                 newMou.Title = mou.Title;
                 newMou.StartDate = mou.StartDate;
                 newMou.EndDate = mou.EndDate;

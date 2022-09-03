@@ -15,23 +15,12 @@ namespace SocomTrainingPlatform.Models.DashboardModels.DashboardViewModels
     {
 
         public Location location { get; set; }
+        public List<FieldImageModel> SiteFields { get; set; }
         public PointOfContact poc { get; set; }
         public List<PointOfContact> PocList { get; set; }
         public Mou mou { get; set; }
         public List<Mou> MouList { get; set; }
-        public List<TargetModel> target { get; set; }
-        public List<InsertModel> insertPoint { get; set; }
-        //public TrainingAreaType trainingType { get; set; }
-        public List<SupportModel> support { get; set; }
-        public List<BerthingModel> berthingWork { get; set; }
-        public List<MeetingModel> meeting { get; set; }
         public List<LocationNote> note { get; set; }
-        public List<SupportImage> sImages { get; set; }
-        public List<TargetImage> tImages { get; set; }
-        public List<BerthingImage> bImages { get; set; }
-        public List<InsertImage> iImages { get; set; }
-        public List<MeetingImage> mImages { get; set; }
-
         public List<Excercise> Excercises { get; set; }
         //public UsageDate indexDates { get; set; }
         //public List<UsageDate> dates { get; set; }
@@ -60,17 +49,7 @@ namespace SocomTrainingPlatform.Models.DashboardModels.DashboardViewModels
         public string FieldDescription { get; set; }
         public string FieldGrid { get; set; }
         public string FieldChoice { get; set; }
-        public string TarChoice { get; set; }
-        public string SupChoice { get; set; }
-        public string InsChoice { get; set; }
-        public string BerChoice { get; set; }
-        public string MetChoice { get; set; }
-        public string GafChoice { get; set; }
-        public string HafChoice { get; set; }
-        public string BafChoice { get; set; }
-        public int ContactChoice { get; set; }
-        public int MouChoice { get; set; }
-
+        public string TypeChoice { get; set; }
         public string ImageField { get; set; }
         public int FieldId { get; set; }
 

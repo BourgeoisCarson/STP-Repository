@@ -1,0 +1,320 @@
+﻿@using SocomTrainingPlatform.Common
+@model SocomTrainingPlatform.Models.SiteModels.SiteSearchVm
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/AdminLayout/_Layout.cshtml";
+}
+@if (ViewBag.Alert != null)
+{
+    <div class="row" id="alert" display="none">
+        <div class="col-md-12">
+            <div class="form-group">
+                @Html.Raw(@ViewBag.Alert)
+            </div>
+        </div>
+    </div>
+}
+
+
+<div class="row" style="padding-top:15px; background-color:white">
+    <div class="col-md-10">
+        <div class="form-group" style="padding-top: 15px;">
+            <div class="input-group input-group-lg">
+                <input type="text" id="productName" class="form-control form-control-lg" placeholder="Enter Location Name..." />
+                <div class="input-group-append">
+                    <button type="submit" class="btn btn-lg btn-default">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="form-group" style="padding-top: 15px;">
+            <a asp-action="Create" class="btn btn-primary">Create New Site</a>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-2" style="background-color:white">
+        <form method="post" asp-action="Search" style="padding-top: 20px">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            @*<div class="form-group">
+                @Html.DropDownList("stateSearch", (IEnumerable<SelectListItem>)(ViewData["State"]), "All States", new { @class = "form-control" })
+            </div>
+            <div class="form-group">
+                @Html.DropDownList("citySearch", (IEnumerable<SelectListItem>)(ViewData["City"]), "All Cities", new { @class = "form-control" })
+            </div>*@
+            <h6 style="text-align: center; text-decoration:underline">Location</h6>
+            <div class="form-group">
+                <select asp-for="stateSearch" asp-items="ViewBag.City" class="form-control">
+                    <option value="">Select State</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <select id="citySearch" asp-for="citySearch" class="form-control" disabled>
+                    <option value="">Select City</option>
+                </select>
+            </div>
+            <h6 style="text-align: center; text-decoration:underline">Type</h6>
+            <div class="form-group">
+                <select class="form-control" asp-for="FieldChoice" id="choice" style="width: 100%;">
+                    <option selected="selected" id="choose">Choose...</option>
+                    <option value="Target">Target</option>
+                    <option value="Support">Support</option>
+                    <option value="InsertPoint">Insert Points</option>
+                    <option value="Berthing">Berthing/Work</option>
+                    <option value="Meeting">Meeting</option>
+                </select>
+            </div>
+            <div id="allChoices">
+                <div class="form-group" id="Target">
+                    <select id="aa" class="form-control" asp-for="TypeChoice" style="width: 100%;" disabled>
+                        <option selected="selected">Choose...</option>
+                        <option value="DA/Raid">DA/Raid</option>
+                        <option value="R&S">R&S</option>
+                        <option value="VehicleIntrediction">Vehicle Intrediction</option>
+                        <option value="Ambush">Ambush</option>
+                        <option value="RAA">RAA</option>
+                        <option value="VirtualSynthetic">Virtual/Synthetic</option>
+                        <option value="Gaf">GAF</option>
+                        <option value="Haf">HAF</option>
+                        <option value="Baf">Baf</option>
+                    </select>
+                </div>
+                <div class="form-group" id="Support" style="display: none;">
+                    <select id="bb" class="form-control" asp-for="TypeChoice" style="width: 100%;">
+                        <option selected="selected">Choose...</option>
+                        <option value="MotorPool">Motor Pool</option>
+                        <option value="FuelFarm">Fuel Farm</option>
+                        <option value="Contractor">Contractor</option>
+                        <option value="MedicalFacility">Medical Facility</option>
+                    </select>
+                </div>
+                <div class="form-group" id="InsertPoint" style="display: none;">
+                    <select id="cc" class="form-control" asp-for="TypeChoice" style="width: 100%;">
+                        <option selected="selected">Choose...</option>
+                        <option value="Airfield/Runway">Airfield/Runway</option>
+                        <option value="DZ">DZ</option>
+                        <option value="HLZ">HLZ</option>
+                        <option value="SplashPoint">SplashPoint</option>
+                        <option value="VDO/Lagger">VDO/Lagger</option>
+                    </select>
+                </div>
+                <div class="form-group" id="Berthing" style="display: none;">
+                    <select id="dd" class="form-control" asp-for="TypeChoice" style="width: 100%;">
+                        <option selected="selected">Choose...</option>
+                        <option value="ECG">ECG</option>
+                        <option value="SOTF/HHQ">SOTF/HHQ</option>
+                        <option value="Company">Company</option>
+                        <option value="TeamSite">Team Site</option>
+                    </select>
+                </div>
+                <div class="form-group" id="Meeting" style="display: none;">
+                    <select id="ee" class="form-control" asp-for="TypeChoice" style="width: 100%;">
+                        <option selected="selected">Choose...</option>
+                        <option value="SA">SA</option>
+                        <option value="KLE">KLE</option>
+                    </select>
+                </div>
+            </div>
+
+            @*<div class="form-group">
+                @Html.DropDownList("targetSearch", (IEnumerable<SelectListItem>)(ViewBag.Target), "All Target Fields", new { @class = "form-control" })
+            </div>
+            <div class="form-group">
+                @Html.DropDownList("insertPoint", (IEnumerable<SelectListItem>)(ViewBag.InsertPoint), "All Insert Points", new { @class = "form-control" })
+            </div>
+            <div class="form-group">
+                @Html.DropDownList("berthingWork", (IEnumerable<SelectListItem>)(ViewBag.BerthingWork), "All Berthing/Work", new { @class = "form-control" })
+            </div>
+            <div class="form-group">
+                @Html.DropDownList("meeting", (IEnumerable<SelectListItem>)(ViewBag.Meeting), "All Meeting Areas", new { @class = "form-control" })
+            </div>
+            <div class="form-group">
+                @Html.DropDownList("support", (IEnumerable<SelectListItem>)(ViewBag.Support), "All Support Areas", new { @class = "form-control" })
+            </div>*@
+            <div class="form-group">
+                <input type="submit" value="Filter" class="btn btn-primary" />
+            </div>
+            @*<div class="col-md-2 form-group">
+            <button type="button" class="btn btn-default" data-toggle="modal" data-target="#modal-default">
+            Launch Default Modal
+            </button>
+            </div>*@
+            </>
+        </form>       
+    </div>
+    <div class="col-md-10">
+        <div class="container-fluid py-4">
+            @foreach (var item in Model.PaginatedModel())
+            {
+                <div class="card bg-light d-flex flex-fill">
+                    <div class="card-body pt-0">
+                        <div class="row">
+                            <div class="col-md-6" style="border-right: 1px #ff0000">
+                                <h4><a asp-action="Details" asp-route-id="@item.Location.Id">@item.Location.Name</a></h4>
+                                <h5>@item.Location.StreetAddress, @item.Location.City, @item.Location.State</h5>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row">
+                                    @foreach (var field in item.SiteFields)
+                                    {
+                                        @if (item.SiteFields != null)
+                                        {
+                                            <div style="padding-top: 10px; padding-right: 10px;">
+                                                <p style="width:min-content; border: black; border-width: 0px; border-style: solid; background-color: lightgrey; border-radius: 5px; text-align: center">@field.Type</p>
+                                            </div>
+                                        }
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            }
+        </div>
+        <div style="position:center">
+            <ul class="pagination">
+                @for (int i = 1; i <= Model.PageCount(); i++)
+                {
+                    <li class="@(i == Model.CurrentPage ? "page-item active" : "page-item")">
+                        <a class="page-link" onclick="submitAsPost(this.href)" href="@Url.Action("Search", new { Model.stateSearch, Model.citySearch, Model.FieldChoice, Model.TypeChoice, page = i })">@i</a>
+                    </li>
+
+                }
+            </ul>
+        </div>
+
+    </div>
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script src="~/plugins/toastr/toastr.min.js"></script>
+    <script src="~/plugins/sweetalert2/sweetalert2.min.js"></script>
+    <script src="~/dist/js/demo.js"></script>
+    <script>
+        $(function () {
+            var Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000
+            });
+
+            $('.swalDefaultSuccess').click(function () {
+                Toast.fire({
+                    icon: 'success',
+                    title: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
+                })
+            });
+        });
+    </script>
+    <script src='https://api.mapbox.com/mapbox-gl-js/v2.2.0/mapbox-gl.js'></script>
+    <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.7.0/mapbox-gl-geocoder.min.js"></script>
+    <script>
+    mapboxgl.accessToken = 'pk.eyJ1IjoiY2Fyc29uYm91cmdlb2lzIiwiYSI6ImNrb2dpamRybzBuOHAycG85bTczZmVreTQifQ.htIKDF3etzcH0j0MN8VUJg';
+        var points = @ViewBag.geopoints;
+        var features = Array;
+
+        var geojson = {
+            "type": "FeatureCollection",
+            "features": [{
+                "properties": {},
+                "type": "Feature",
+                "geometry": {
+                    "type": "MultiPoint",
+                    "coordinates": [points]
+                }
+            }]
+        };
+
+        var map = new mapboxgl.Map({
+            container: 'map',
+            style: 'mapbox://styles/mapbox/streets-v11',
+            center: ['87', '13'],
+            zoom: 12,
+            });
+
+
+
+         var marker =  new mapboxgl.Marker(geojson)
+            .setLngLat(geojson.features.geometry.coordinates)
+            .addTo(map);
+
+    </script>
+
+    <script>
+        $("#choice").change(function () {
+            $("#aa,#bb,#cc,#dd,#ee").val([]);
+
+
+            if ($(this).val() == "Target") {
+                $("#aa").attr("disabled", false);
+                $("#Support,#InsertPoint,#Berthing,#Meeting").hide();
+                $("#Target").show();
+            }
+            else if ($(this).val() == "Support") {
+                $("#Target,#InsertPoint,#Berthing,#Meeting").hide();
+                $("#Support").show();
+            }
+            else if ($(this).val() == "InsertPoint") {
+                $("#Support,#Target,#Berthing,#Meeting").hide();
+                $("#InsertPoint").show();
+            }
+            else if ($(this).val() == "Berthing") {
+                $("#Support,#InsertPoint,#Target,#Meeting").hide();
+                $("#Berthing").show();
+            }
+            else if ($(this).val() == "Meeting") {
+                $("#Support,#InsertPoint,#Berthing,#Target").hide();
+                $("#Meeting").show();
+            }
+        });
+
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            setTimeout('$("#alert").hide()', 2000);
+        });
+    </script>
+
+    <script>
+    var stateOpt = @Html.Raw(Json.Serialize(ViewData["stateSearch"]));
+    var cityOpt = @Html.Raw(Json.Serialize(ViewData["citySearch"]));
+    </script>
+    <script>
+        $(function () {
+            $("select#stateSearch").change(function () {
+                var cid = $(this).val();
+                $("select#citySearch").attr("disabled", false);
+
+                $("select#citySearch").empty();
+                $("select#citySearch").append(`<option value="${"Select City"}">${"Select City"}</option>`)
+
+                $.getJSON(`/Site/GetCitys?cid=${cid}`, function (data) {
+                    console.log(data);
+                    $.each(data, function (i, item) {
+                        $("select#citySearch").append(`<option value="${item.id}">${item.name}</option>`);
+                    });
+                });
+            })
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            $('#productName').autocomplete({
+                source: '/Site/Suggest',
+                select: function (event, ui) {
+                    window.location.href = "/Site/SearchRedirect?name=" + ui.item.label;
+                }
+            });
+        });
+    </script>
+
+}

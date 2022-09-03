@@ -14,306 +14,103 @@
         </div>
         <ul class="nav nav-pills ml-auto p-2">
             <li class="bi bi-map" style="padding-right: 10px"><button type="button" class="btn btn-default" data-toggle="modal" data-target="#modal-map">Map View</button></li>
+            <li>
+                <div class="btn-group">
+                    <a href="#" type="button" class="btn btn-default" data-toggle="dropdown">
+                        <i class="fas fa-ellipsis-v"></i>
+                    </a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a asp-action="EditSite" asp-route-id="@Model.location.Id">Edit Site</a></li>
+                        <li><a style="color:red" asp-action="DeleteSite" asp-route-id="@Model.location.Id">Delete Site</a></li>
+                    </ul>
+                </div>
+            </li>
         </ul>
     </div>
 </div>
 <div class="container-fluid py-4">
     <div class="row">
         <div class="container-fluid col-md-8">
-            <div class="card">
-                <div class="card-header">
-                    <h2 class="card-title">Site Fields</h2>
-                    <div class="card-tools">
-                        <a href="#" class="btn btn-tool btn-sm" data-toggle="modal" data-target="#modal-fields">
-                            <i class="fas fa-plus"></i>
-                        </a>
+            @if (Model.SiteFields.Count() < 0)
+            {
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Site Fields</h2>
+                        <div class="card-tools">
+                            <a href="#" class="btn btn-tool btn-sm" data-toggle="modal" data-target="#modal-fields">
+                                <i class="fas fa-plus"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card-body" style="overflow-y: auto;">
                     </div>
                 </div>
-                <div class="card-body" style="overflow-y: auto; height: 670px">
-                    @{int tgInt = 1;}
-                    @foreach (var item in Model.target)
-                    {
-                        <div class="accordion" id="taccordion-@item.Target.Id" aria-multiselectable="true">
-                            <div class="card">
-                                <div class="card-header" id="Heading-@item.Target.Id">
-                                    <div type="button" data-target="#target_@tgInt" data-toggle="collapse"
-                                         aria-expanded="false" aria-controls="@item.Target.Name">
-                                        <h4><strong>@item.Target.Name</strong></h4>
-                                        @if (item.Target.Ambush == true)
-                                        {
-                                            <h4>Type: Target - Ambush</h4>
-                                        }
-                                        @if (item.Target.Baf == true)
-                                        {
-                                            <h4>Type: Target - BAF</h4>
-                                        }
-                                        @if (item.Target.DaRaid == true)
-                                        {
-                                            <h4>Type: Target - DA/Raid</h4>
-                                        }
-                                        @if (item.Target.Gaf == true)
-                                        {
-                                            <h4>Type: Target - GAF</h4>
-                                        }
-                                        @if (item.Target.VehicleIntrediction == true)
-                                        {
-                                            <h4>Type: Target - Vehicle Intrediction</h4>
-                                        }
-                                        @if (item.Target.VirtualSynthetic == true)
-                                        {
-                                            <h4>Type: Target - Virtual Synthetic</h4>
-                                        }
-                                        @if (item.Target.Raa == true)
-                                        {
-                                            <h4>Type: Target - RAA</h4>
-                                        }
-                                        @if (item.Target.Rs == true)
-                                        {
-                                            <h4>Type: Target - R&S</h4>
-                                        }
-                                        @if (item.Target.Haf == true)
-                                        {
-                                            <h4>Type: Target - HAF</h4>
-                                        }
-                                        <h4>Grid: @item.Target.Grid</h4>
-                                    </div>
-                                </div>
-                                <div class="collapse" id="target_@tgInt" aria-labelledby="Heading-@item.Target.Id" data-parent="#taccordion-@item.Target.Id">
-                                    <div class="card-body">
-                                        <p>@item.Target.Description</p>
-                                        <button style="padding-bottom: 5px" type="button" class="btn btn-default" data-toggle="modal" data-target="#modal-image" data-id="@item.Target.Id" data-string="target" btn-id="@item.Target.Id">Add Image</button>
-
-                                        @if (item.Images != null)
-                                        {
+            }
+            else
+            {
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Site Fields</h2>
+                        <div class="card-tools">
+                            <a href="#" class="btn btn-tool btn-sm" data-toggle="modal" data-target="#modal-fields">
+                                <i class="fas fa-plus"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card-body" style="overflow-y: auto; height: 670px">
+                        @{int fInt = 1;}
+                        @foreach (var item in Model.SiteFields)
+                        {
+                            <div class="accordion" id="faccordion-@item.Field.Id" aria-multiselectable="true">
+                                <div class="card">
+                                    <div class="card-header" id="Heading-@item.Field.Id">
+                                        <div type="button" data-target="#field_@fInt" data-toggle="collapse"
+                                             aria-expanded="false" aria-controls="@item.Field.Name">
                                             <div class="row">
-                                                <div class="form-group">
-                                                    @foreach (var image in item.Images)
-                                                    {
-                                                        <a href="data:image/jpg;base64,@Convert.ToBase64String(image.ImageFile)" class="yBox" data-ybox-group="group1">
-                                                            <img src="data:image/jpg;base64,@Convert.ToBase64String(image.ImageFile)" alt="New Image" width="200" />
-                                                        </a>
-                                                    }
+                                                <h4><strong>@item.Field.Name</strong></h4>
+                                                <div style="position:absolute; right:5px" class="btn-group">
+                                                    <a style="float:right" href="#" type="button" class="btn btn-default" data-toggle="dropdown">
+                                                        <i class="fas fa-ellipsis-v"></i>
+                                                    </a>
+                                                    <ul class="dropdown-menu" role="menu">
+                                                        <li><a asp-action="EditSiteField" asp-route-id="@item.Field.Id">Edit Field</a></li>
+                                                        <li><a style="color:red" asp-action="DeleteSiteField" asp-route-id="@item.Field.Id">Delete Field</a></li>
+                                                    </ul>
                                                 </div>
                                             </div>
-                                        }
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <hr>
-                        tgInt++;
-                    }
-                    @{int sInt = 1;}
-                    @foreach (var item in Model.support)
-                    {
-                        <div class="accordion" id="saccordion-@item.Support.Id" aria-multiselectable="true">
-                            <div class="card">
-                                <div class="card-header">
-                                    <div type="button" data-target="#support_@sInt" data-toggle="collapse"
-                                         aria-expanded="false" aria-controls="@item.Support.Name">
-                                        <h4><strong>@item.Support.Name</strong></h4>
-                                        @if (item.Support.Contractor == true)
-                                        {
-                                            <h4>Type: Support - Contractor</h4>
-                                        }
-                                        @if (item.Support.FuelFarm == true)
-                                        {
-                                            <h4>Type: Support - Fuel Farm</h4>
-                                        }
-                                        @if (item.Support.MedicalFacility == true)
-                                        {
-                                            <h4>Type: Support - Medical Facility</h4>
-                                        }
-                                        @if (item.Support.MotorPool == true)
-                                        {
-                                            <h4>Type: Support - Motor Pool</h4>
-                                        }
-                                        <h4>Grid: @item.Support.Grid</h4>
-                                    </div>
-                                </div>
-                                <div class="collapse" id="support_@sInt" aria-labelledby="Heading-@item.Support.Id" data-parent="#saccordion-@item.Support.Id">
-                                    <div class="card-body">
-                                        <p>@item.Support.Description</p>
-                                        <button type="button" class="btn btn-default" data-toggle="modal" data-target="#modal-image" data-id="@item.Support.Id" data-string="Support" btn-id="@item.Support.Id">Add Image</button>
-                                    </div>
-                                    @if (item.Image != null)
-                                    {
-                                        <div class="row">
-                                            <div class="form-group">
-                                                @foreach (var image in item.Image)
-                                                {
-                                                    <a href="data:image/jpg;base64,@Convert.ToBase64String(image.Image)" class="yBox" data-ybox-group="group1">
-                                                        <img src="data:image/jpg;base64,@Convert.ToBase64String(image.Image)" alt="New Image" width="200" />
-                                                    </a>
-                                                }
-                                            </div>
+                                            <h4>Type: @item.Field.Field - @item.Field.Type</h4>
+                                            <h4>Grid: @item.Field.Grid</h4>
                                         </div>
-                                    }
-                                </div>
-                            </div>
-                        </div>
-                        <hr>
-                        sInt++;
-                    }
-                    @{int iInt = 1;}
-                    @foreach (var item in Model.insertPoint)
-                    {
-                        <div class="accordion" id="iaccordion-@item.InsertPoint.Id" aria-multiselectable="true">
-                            <div class="card">
-                                <div class="card-header">
-                                    <div type="button" data-target="#insert_@iInt" data-toggle="collapse"
-                                         aria-expanded="false" aria-controls="@item.InsertPoint.Name">
-                                        <h4><strong>@item.InsertPoint.Name</strong></h4>
-                                        @if (item.InsertPoint.AirfieldRunway == true)
-                                        {
-                                            <h4>Type: Insert Point - Airfeild/Runway</h4>
-                                        }
-                                        @if (item.InsertPoint.Bls == true)
-                                        {
-                                            <h4>Type: Insert Point - BLS</h4>
-                                        }
-                                        @if (item.InsertPoint.Dz == true)
-                                        {
-                                            <h4>Type: Insert Point - DZ</h4>
-                                        }
-                                        @if (item.InsertPoint.Hlz == true)
-                                        {
-                                            <h4>Type: Insert Point - HLZ</h4>
-                                        }
-                                        @if (item.InsertPoint.SplashPoint == true)
-                                        {
-                                            <h4>Type: Insert Point - Splash Point</h4>
-                                        }
-                                        @if (item.InsertPoint.VdoLagger == true)
-                                        {
-                                            <h4>Type: Insert Point - VDO Lagger</h4>
-                                        }
-                                        <h4>Grid: @item.InsertPoint.Grid</h4>
                                     </div>
-                                </div>
-                                <div class="collapse" id="insert_@iInt" data-parent="#iaccordion-@item.InsertPoint.Id">
-                                    <div class="card-body">
-                                        <p>@item.InsertPoint.Description</p>
-                                        <button type="button" class="btn btn-default" data-toggle="modal" data-target="#modal-image" data-id="@item.InsertPoint.Id" data-string="Insert" btn-id="@item.InsertPoint.Id">Add Image</button>
-                                    </div>
-                                    @if (item.Images != null)
-                                    {
-                                        <div class="row">
-                                            <div class="form-group">
-                                                @foreach (var image in item.Images)
-                                                {
-                                                    <a href="data:image/jpg;base64,@Convert.ToBase64String(image.Image)" class="yBox" data-ybox-group="group1">
-                                                        <img src="data:image/jpg;base64,@Convert.ToBase64String(image.Image)" alt="New Image" width="200" />
-                                                    </a>
-                                                }
-                                            </div>
-                                        </div>
-                                    }
-                                </div>
-                            </div>
-                        </div>
-                        <hr>
-                        iInt++;
-                    }
+                                    <div class="collapse" id="field_@fInt" aria-labelledby="Heading-@item.Field.Id" data-parent="#faccordion-@item.Field.Id">
+                                        <div class="card-body">
+                                            <p>@item.Field.Description</p>
+                                            <button style="padding-bottom: 5px" type="button" class="btn btn-default" data-toggle="modal" data-target="#modal-image" data-id="@item.Field.Id" data-string="target" btn-id="@item.Field.Id">Add Image</button>
 
-                    @{int bInt = 1;}
-                    @foreach (var item in Model.berthingWork)
-                    {
-                        <div class="accordion" id="baccordion-@item.Berthing.Id" aria-multiselectable="true">
-                            <div class="card">
-                                <div class="card-header">
-                                    <div type="button" data-target="#berthing_@bInt" data-toggle="collapse"
-                                         aria-expanded="false" aria-controls="@item.Berthing.Name">
-                                        <h4><strong>@item.Berthing.Name</strong></h4>
-                                        @if (item.Berthing.Company == true)
-                                        {
-                                            <h4>Type: Berthing - Company</h4>
-                                        }
-                                        @if (item.Berthing.Ecg == true)
-                                        {
-                                            <h4>Type: Berthing - ECG</h4>
-                                        }
-                                        @if (item.Berthing.SotfHq == true)
-                                        {
-                                            <h4>Type: Berthing - SOTF/HQ</h4>
-                                        }
-                                        @if (item.Berthing.TeamSite == true)
-                                        {
-                                            <h4>Type: Berthing - Team Site</h4>
-                                        }
-                                        <h4>Grid: @item.Berthing.Grid</h4>
-                                    </div>
-                                </div>
-                                <div class="collapse" id="berthing_@bInt" data-parent="#baccordion-@item.Berthing.Id">
-                                    <div class="card-body">
-                                        <p>@item.Berthing.Description</p>
-                                        <button type="button" class="btn btn-default" data-toggle="modal" data-target="#modal-image" data-id="@item.Berthing.Id" data-string="Berthing" btn-id="@item.Berthing.Id">Add Image</button>
-                                    </div>
-                                    @if (item.Images != null)
-                                    {
-                                        <div class="row">
-                                            <div class="form-group">
-                                                @foreach (var image in item.Images)
-                                                {
-                                                    <a href="data:image/jpg;base64,@Convert.ToBase64String(image.ImageFile)" class="yBox" data-ybox-group="group1">
-                                                        <img src="data:image/jpg;base64,@Convert.ToBase64String(image.ImageFile)" alt="New Image" width="200" />
-                                                    </a>
-                                                }
-                                            </div>
+                                            @if (item.Images != null)
+                                            {
+                                                <div class="row" style="padding-top: 10px">
+                                                    <div class="form-group">
+                                                        @foreach (var image in item.Images)
+                                                        {
+                                                            <a href="data:image/jpg;base64,@Convert.ToBase64String(image.Image)" class="yBox" data-ybox-group="group1">
+                                                                <img src="data:image/jpg;base64,@Convert.ToBase64String(image.Image)" alt="New Image" width="200" />
+                                                            </a>
+                                                        }
+                                                    </div>
+                                                </div>
+                                            }
                                         </div>
-                                    }
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <hr>
-                        bInt++;
-                    }
-                    @{int mInt = 1;}
-                    @foreach (var item in Model.meeting)
-                    {
-                        <div class="accordion" id="maccordion-@item.Meeting.Id" aria-multiselectable="true">
-                            <div class="card">
-                                <div class="card-header">
-                                    <div type="button" data-target="#meeting_@mInt" data-toggle="collapse"
-                                         aria-expanded="false" aria-controls="@item.Meeting.Name">
-                                        <h4><strong>@item.Meeting.Name</strong></h4>
-                                        @if (item.Meeting.Kle == true)
-                                        {
-                                            <h4>Type: Meeting - KLE</h4>
-                                        }
-                                        @if (item.Meeting.Sa == true)
-                                        {
-                                            <h4>Type: Meeting - SA</h4>
-                                        }
-                                        <h4>Grid: @item.Meeting.Grid</h4>
-                                    </div>
-                                </div>
-                                <div class="collapse" id="meeting_@mInt" data-parent="#baccordion-@item.Meeting.Id">
-                                    <div class="card-body">
-                                        <p>@item.Meeting.Description</p>
-                                        <button type="button" class="btn btn-default" data-toggle="modal" data-target="#modal-image" data-id="@item.Meeting.Id" data-string="Meeting" btn-id="@item.Meeting.Id">Add Image</button>
-                                    </div>
-                                    @if (item.Images != null)
-                                    {
-                                        <div class="row">
-                                            <div class="form-group">
-                                                @foreach (var image in item.Images)
-                                                {
-                                                    <a href="data:image/jpg;base64,@Convert.ToBase64String(image.ImageFile)" class="yBox" data-ybox-group="group1">
-                                                        <img src="data:image/jpg;base64,@Convert.ToBase64String(image.ImageFile)" alt="New Image" width="200" />
-                                                    </a>
-                                                }
-                                            </div>
-                                        </div>
-                                    }
-                                </div>
-                            </div>
-                        </div>
-                        <hr>
-                        mInt++;
-                    }
+                            <hr>
+                            fInt++;
+                        }
+                    </div>
                 </div>
-            </div>
+            }
+
             <div class="card">
                 <div class="card-header border-0">
                     <h3 class="card-title">Notes</h3>
@@ -345,9 +142,25 @@
                 <div class="card-header border-0">
                     <h3 class="card-title">MOU Details</h3>
                     <div class="card-tools">
-                        <a href="#" class="btn btn-tool btn-sm" data-toggle="modal" data-target="#modal-mou">
-                            <i class="fas fa-plus"></i>
-                        </a>
+                        @if (Model.mou.Title != null)
+                        {
+                            <div class="btn-group">
+                                <a href="#" class="btn btn-tool btn-sm" data-toggle="dropdown">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                                    <li><a href="#" type="button" data-toggle="modal" data-target="#modal-mou-update">Change MOU</a></li>
+                                    <li><a type="button" style="color:red" asp-action="RemoveMou" asp-route-id="@Model.location.Id">Remove MOU</a></li>
+                                </ul>
+                            </div>
+                        }
+                        else
+                        {
+                            <a href="#" class="btn btn-tool btn-sm" data-toggle="modal" data-target="#modal-mou">
+                                <i class="fas fa-plus"></i>
+                            </a>
+                        }
+
                     </div>
                 </div>
                 <!-- /.card-header -->
@@ -395,9 +208,24 @@
                 <div class="card-header border-0">
                     <h3 class="card-title">Point Of Contact</h3>
                     <div class="card-tools">
-                        <a href="#" class="btn btn-tool btn-sm" data-toggle="modal" data-target="#modal-POC">
-                            <i class="fas fa-plus"></i>
-                        </a>
+                        @if (Model.poc.FirstName != null)
+                        {
+                            <div class="btn-group">
+                                <a href="#" class="btn btn-tool btn-sm" data-toggle="dropdown">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                                    <li><a href="#" type="button" data-toggle="modal" data-target="#modal-poc-update">Change POC</a></li>
+                                    <li><a type="button" style="color:red" asp-action="RemovePoc" asp-route-id="@Model.location.Id">Remove POC</a></li>
+                                </ul>
+                            </div>
+                        }
+                        else
+                        {
+                            <a href="#" class="btn btn-tool btn-sm" data-toggle="modal" data-target="#modal-POC">
+                                <i class="fas fa-plus"></i>
+                            </a>
+                        }
                     </div>
                 </div>
                 <!-- /.card-header -->
@@ -495,7 +323,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form method="post" asp-action="AddField" asp-route-id="@Model.location.Id">
+            <form method="post" asp-action="AddSiteField" asp-route-id="@Model.location.Id">
                 <div class="modal-body">
                     <div class="form-group" style="align-content: center">
                         <div class="form-group">
@@ -503,21 +331,21 @@
                             <div>
                                 <select class="form-control" asp-for="FieldChoice" id="choice" style="width: 100%;">
                                     <option selected="selected" id="choose">Choose...</option>
-                                    <option value="A">Target</option>
-                                    <option value="B">Support</option>
-                                    <option value="C">Insert Points</option>
-                                    <option value="D">Berthing/Work</option>
-                                    <option value="E">Meeting</option>
+                                    <option value="Target">Target</option>
+                                    <option value="Support">Support</option>
+                                    <option value="InsertPoint">Insert Points</option>
+                                    <option value="Berthing">Berthing/Work</option>
+                                    <option value="Meeting">Meeting</option>
                                 </select>
                             </div>
                             <hr />
                             <div id="allChoices">
-                                <div class="form-group" id="A" style="display: none;">
-                                    <select class="form-control" asp-for="TarChoice" style="width: 100%;">
+                                <div class="form-group" id="Target" style="display: none;">
+                                    <select id="aa" class="form-control" asp-for="TypeChoice" style="width: 100%;">
                                         <option selected="selected">Choose...</option>
                                         <option value="DA/Raid">DA/Raid</option>
                                         <option value="R&S">R&S</option>
-                                        <option value="VehicleIntrediction">Vehicle Intredictiont</option>
+                                        <option value="VehicleIntrediction">Vehicle Intrediction</option>
                                         <option value="Ambush">Ambush</option>
                                         <option value="RAA">RAA</option>
                                         <option value="VirtualSynthetic">Virtual/Synthetic</option>
@@ -526,8 +354,8 @@
                                         <option value="Baf">Baf</option>
                                     </select>
                                 </div>
-                                <div class="form-group" id="B" style="display: none;">
-                                    <select class="form-control" asp-for="SupChoice" style="width: 100%;">
+                                <div class="form-group" id="Support" style="display: none;">
+                                    <select id="bb" class="form-control" asp-for="TypeChoice" style="width: 100%;">
                                         <option selected="selected">Choose...</option>
                                         <option value="MotorPool">Motor Pool</option>
                                         <option value="FuelFarm">Fuel Farm</option>
@@ -535,8 +363,8 @@
                                         <option value="MedicalFacility">Medical Facility</option>
                                     </select>
                                 </div>
-                                <div class="form-group" id="C" style="display: none;">
-                                    <select class="form-control" asp-for="InsChoice" style="width: 100%;">
+                                <div class="form-group" id="InsertPoint" style="display: none;">
+                                    <select id="cc" class="form-control" asp-for="TypeChoice" style="width: 100%;">
                                         <option selected="selected">Choose...</option>
                                         <option value="Airfield/Runway">Airfield/Runway</option>
                                         <option value="DZ">DZ</option>
@@ -545,17 +373,17 @@
                                         <option value="VDO/Lagger">VDO/Lagger</option>
                                     </select>
                                 </div>
-                                <div class="form-group" id="D" style="display: none;">
-                                    <select class="form-control" asp-for="BerChoice" style="width: 100%;">
+                                <div class="form-group" id="Berthing" style="display: none;">
+                                    <select id="dd" class="form-control" asp-for="TypeChoice" style="width: 100%;">
                                         <option selected="selected">Choose...</option>
                                         <option value="ECG">ECG</option>
                                         <option value="SOTF/HHQ">SOTF/HHQ</option>
-                                        <option value="Comapny">Comapny</option>
+                                        <option value="Company">Company</option>
                                         <option value="TeamSite">Team Site</option>
                                     </select>
                                 </div>
-                                <div class="form-group" id="E" style="display: none;">
-                                    <select class="form-control" asp-for="MetChoice" style="width: 100%;">
+                                <div class="form-group" id="Meeting" style="display: none;">
+                                    <select id="ee" class="form-control" asp-for="TypeChoice" style="width: 100%;">
                                         <option selected="selected">Choose...</option>
                                         <option value="SA">SA</option>
                                         <option value="KLE">KLE</option>
@@ -631,19 +459,76 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form method="post" asp-action="AddMou" asp-route-id="@Model.location.Id">
-                <div class="modal-body">
-                    <div class="form-goup">
-                            <label>Select MOU</label>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col">
+                        <button asp-for="mouChoice" value="1" style="padding-right: 10px" type="button" id="NewMou" class="btn btn-default">New MOU</button>
+                    </div>
+                    <div class="col">
+                        <button asp-for="mouChoice" value="2" style="padding-left: 10px" type="button" id="ExsistingMou" class="btn btn-default">Exsisting MOU</button>
+                    </div>
+                </div>
+                <div class="form-group" style="display: none" id="exmou">
+                    <form method="post" asp-action="AddMou" asp-route-id="@Model.location.Id">
+                        <div class="form-goup">
+                            <label>Select Exsisting MOU</label>
                             <select asp-for="MouId" class="form-control" id="MouId" asp-items="ViewBag.MouId"></select>
                             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <input type="submit" value="Submit" />
                         </div>
+                    </form>
                 </div>
-                <div class="modal-footer justify-content-between">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <input type="submit" value="Submit" />
+                <div class="form-group" style="display: none" id="newmou">
+                    <form asp-action="CreateNewMou" enctype="multipart/form-data" asp-route-id="@Model.location.Id">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="form-group">
+                            <label>Mou Name</label>
+                            <input asp-for="mou.Title" class="form-control" />
+                            <span asp-validation-for="mou.Title" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label>Choose File</label>
+                            <input asp-for="mou.File" class="form-control" accept=".pdf" type="file" />
+                        </div>
+                        <div class="form-group">
+                            <label>Start Date</label>
+                            <input asp-for="mou.StartDate.Date" asp-format="{0:yyyy-MM-dd}" class="form-control" />
+                            <span asp-validation-for="mou.StartDate" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label>End Date</label>
+                            <input asp-for="mou.EndDate" asp-format="{0:yyyy-MM-dd}" class="form-control" />
+                            <span asp-validation-for="mou.EndDate" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label>Contact First Name</label>
+                            <input asp-for="mou.FirstName" class="form-control" />
+                            <span asp-validation-for="mou.FirstName" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label>Contact Last Name</label>
+                            <input asp-for="mou.lastName" class="form-control" />
+                            <span asp-validation-for="mou.lastName" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label>Contact Email</label>
+                            <input asp-for="mou.Email" class="form-control" />
+                            <span asp-validation-for="mou.Email" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label>Contact Phone Number</label>
+                            <input asp-for="mou.PhoneNumber" class="form-control" />
+                            <span asp-validation-for="mou.PhoneNumber" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <input type="submit" value="Create" class="btn btn-primary" />
+                        </div>
+                    </form>
                 </div>
-            </form>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
         </div>
         <!-- /.modal-content -->
     </div>
@@ -660,7 +545,7 @@
                 </button>
             </div>
             <form method="post" asp-action="AddContact" asp-route-id="@Model.location.Id">
-                @Html.HiddenFor(p => p.pocChoice, new { id = "Id"})
+                @Html.HiddenFor(p => p.pocChoice, new { id = "Id" })
                 <div class="modal-body">
                     <div class="col">
                         <div class="row">
@@ -678,28 +563,28 @@
                         </div>
                         <div style="display: none" id="newpoc">
                             <div class="form-group">
-                                <label asp-for="EmailAddress" class="control-label"></label>
+                                <label class="control-label">Email Address</label>
                                 <input asp-for="EmailAddress" class="form-control" />
                                 <span asp-validation-for="EmailAddress" class="text-danger"></span>
                             </div>
                             <div class="form-group">
-                                <label asp-for="FirstName" class="control-label"></label>
+                                <label class="control-label">First Name</label>
                                 <input asp-for="FirstName" class="form-control" />
                                 <span asp-validation-for="FirstName" class="text-danger"></span>
                             </div>
                             <div class="form-group">
-                                <label asp-for="LastName" class="control-label"></label>
+                                <label class="control-label">last Name</label>
                                 <input asp-for="LastName" class="form-control" />
                                 <span asp-validation-for="LastName" class="text-danger"></span>
                             </div>
                             <p>AND/OR</p>
                             <div class="form-group">
-                                <label asp-for="OrganizationName" class="control-label"></label>
+                                <label class="control-label">Organization Name</label>
                                 <input asp-for="OrganizationName" class="form-control" />
                                 <span asp-validation-for="OrganizationName" class="text-danger"></span>
                             </div>
                             <div class="form-group">
-                                <label asp-for="PhoneNumber" class="control-label"></label>
+                                <label class="control-label">Phone Number</label>
                                 <input asp-for="PhoneNumber" class="form-control" />
                                 <span asp-validation-for="PhoneNumber" class="text-danger"></span>
                             </div>
@@ -772,7 +657,7 @@
                 <input type="hidden" asp-for="ImageField" id="ImageField" />
                 <div class="modal-body">
                     <div class="form-group">
-                        
+
                     </div>
                     <div class="form-group">
                         <label>Image Upload</label>
@@ -793,27 +678,77 @@
     </div>
     <!-- /.modal-dialog -->
 </div>
+<div class="modal fade" id="modal-mou-update">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Change MOU</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group" id="replacemou">
+                    <form method="post" asp-action="AddMou" asp-route-id="@Model.location.Id">
+                        <div class="form-goup">
+                            <label>Select Exsisting MOU</label>
+                            <select asp-for="MouId" class="form-control" id="MouId" asp-items="ViewBag.MouId"></select>
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <input type="submit" value="Submit" />
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<div class="modal fade" id="modal-poc-update">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Change POC</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group" id="replacepoc">
+                    <form method="post" asp-action="ChangeContact" asp-route-id="@Model.location.Id">
+                        @Html.HiddenFor(p => p.pocChoice, new { id = "Id" })
+                        <label>Exsisting Contact</label>
+                        <select asp-for="PocId" class="form-control" id="PocId" asp-items="ViewBag.PocId"></select>
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
 
 <div class="container-fluid py-4">
-    <a asp-action="Edit" asp-route-id="@Model.location.Id">Edit</a>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="EditSite" asp-route-id="@Model.location.Id">Edit</a>
+    <a asp-action="Search">Back to List</a>
 </div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 
 
-<script src='https://api.mapbox.com/mapbox-gl-js/v2.2.0/mapbox-gl.js'></script>
-<script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.7.0/mapbox-gl-geocoder.min.js"></script>
-<script src="~/plugins/jquery-ui/jquery-ui.min.js"></script>
-<script src="~/plugins/moment/moment.min.js"></script>
-<script src="~/plugins/fullcalendar/main.js"></script>
-<script src="~/plugins/ekko-lightbox/ekko-lightbox.js"></script>
-<script src="~/plugins/jquery/jquery.min.js"></script>
+    <script src='https://api.mapbox.com/mapbox-gl-js/v2.2.0/mapbox-gl.js'></script>
+    <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.7.0/mapbox-gl-geocoder.min.js"></script>
+    <script src="~/plugins/jquery-ui/jquery-ui.min.js"></script>
+    <script src="~/plugins/moment/moment.min.js"></script>
+    <script src="~/plugins/fullcalendar/main.js"></script>
+    <script src="~/plugins/ekko-lightbox/ekko-lightbox.js"></script>
+    <script src="~/plugins/jquery/jquery.min.js"></script>
 
-<script src="~/dist/js/lightbox.js"></script>
+    <script src="~/dist/js/lightbox.js"></script>
 
-<script>
+    <script>
     mapboxgl.accessToken = 'pk.eyJ1IjoiY2Fyc29uYm91cmdlb2lzIiwiYSI6ImNrb2dpamRybzBuOHAycG85bTczZmVreTQifQ.htIKDF3etzcH0j0MN8VUJg';
 
             var map = new mapboxgl.Map({
@@ -827,84 +762,104 @@
                 .setLngLat([@ViewBag.Long, @ViewBag.Lat])
                 .addTo(map);</script>
 
-<script>
+    <script>
 
-    document.addEventListener('DOMContentLoaded', function() {
-      var calendarEl = document.getElementById('calendar');
-      var calendar = new FullCalendar.Calendar(calendarEl, {
-        initialView: 'dayGridMonth'
-      });
-      calendar.render();
-    });
-
-</script>
-<script>
-    $(function () {
-        //Initialize Select2 Elements
-        $('.select2').select2()
-        $('#reservation').daterangepicker();
-        $('form').submit(function (ev, picker) {
-        [startDate, endDate] = $('.date_range').val().split(' - ');
-        $(this).find('input[name="start_date"]').val(startDate);
-        $(this).find('input[name="end_date"]').val(endDate);
+        document.addEventListener('DOMContentLoaded', function () {
+            var calendarEl = document.getElementById('calendar');
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth'
+            });
+            calendar.render();
         });
-</script>
-<script>
-        $("#choice").change(function(){
-      $("#A,#B,#C,#D,#E").hide();
-      if($(this).val() == "A"){
-        $("#A").show();
-      }
-      else if($(this).val() == "B"){
-        $("#B").show();
-      }
-      else if($(this).val() == "C"){
-        $("#C").show();
-      }
-      else if($(this).val() == "D"){
-        $("#D").show();
-      }
-      else if($(this).val() == "E"){
-        $("#E").show();
-      }
-    });
 
-</script>
-<script>
-    var choice = 0;
-     $('#NewPoc').click(function() {
-         $('#exspoc').hide();
-         $('#newpoc').show();
-         $('#Id').val(1);
-     });
-     $('#ExsistingPoc').click(function() {
-         $('#newpoc').hide();
-         $('#exspoc').show();
-         $("#Id").val(2);
-     });
-</script>
-<script>  
+    </script>
+    <script>
+        $(function () {
+            //Initialize Select2 Elements
+            $('.select2').select2()
+            $('#reservation').daterangepicker();
+            $('form').submit(function (ev, picker) {
+                [startDate, endDate] = $('.date_range').val().split(' - ');
+                $(this).find('input[name="start_date"]').val(startDate);
+                $(this).find('input[name="end_date"]').val(endDate);
+            });
+    </script>
+    <script>
+        $("#choice").change(function () {
+            $("#aa,#bb,#cc,#dd,#ee").val([]);
+            $("#Target,#Support,#InsertPoint,#Berthing,#Meeting").hide();
+
+            if ($(this).val() == "Target") {
+                $("#Target").show();
+            }
+            else if ($(this).val() == "Support") {
+                $("#Support").show();
+            }
+            else if ($(this).val() == "InsertPoint") {
+                $("#InsertPoint").show();
+            }
+            else if ($(this).val() == "Berthing") {
+                $("#Berthing").show();
+            }
+            else if ($(this).val() == "Meeting") {
+                $("#Meeting").show();
+            }
+        });
+
+    </script>
+    <script>
+        $('#NewMou').click(function () {
+            $('#exmou').hide();
+            $('#newmou').show();
+            $('#Id').val(1);
+        });
+        $('#ExsistingMou').click(function () {
+            $('#newmou').hide();
+            $('#exmou').show();
+            $("#Id").val(2);
+        });
+    </script>
+    <script>
+        var choice = 0;
+        $('#NewPoc').click(function () {
+            $('#exspoc').hide();
+            $('#newpoc').show();
+            $('#Id').val(1);
+        });
+        $('#ExsistingPoc').click(function () {
+            $('#newpoc').hide();
+            $('#exspoc').show();
+            $("#Id").val(2);
+        });
+    </script>
+    <script>
+        var choice = 0;
+        $('#NewMouEdit').click(function () {
+            $('#RemoveMou').hide();
+            $('#replacemou').show();
+            $('#Id').val(1);
+        });
+        $('#RemoveMou').click(function () {
+            $('#replacemou').hide();
+            $("#Id").val(2);
+        });
+    </script>
+    <script>
     $("button").click(function() {
         var string = $(this).attr('data-string');
         var id = $(this).attr('data-id');
         $('#FieldId').val(id);
         $("#ImageField").val(string);
     });
+    </script>
+    <script>
+        $(document).on('click', '[data-toggle="lightbox"]', function (event) {
+            event.preventDefault();
+            $(this).ekkoLightbox({
+                alwaysShowClose: true
+            });
+        });
+    </script>
 
-    @*$('btn-id').click(function(){
-        $('#FieldId').val($(this).attr('data-id'));
-        $("#ImageField").val($(this).data("string"));
-    });*@
-
-</script>
-<script>
-    $(document).on('click', '[data-toggle="lightbox"]', function(event) {
-      event.preventDefault();
-      $(this).ekkoLightbox({
-        alwaysShowClose: true
-      });
-    });
-</script>
-
-   }
+}
 

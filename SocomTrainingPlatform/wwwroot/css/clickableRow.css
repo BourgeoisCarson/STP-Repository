@@ -1,0 +1,24 @@
+﻿table#infoTable {
+    border-collapse: collapse;
+}
+
+#example tr {
+    background-color: white;
+    border-top: 1px solid #fff;
+}
+
+    #example tr:hover {
+        background-color: #ccc;
+    }
+
+#example th {
+    background-color: #fff;
+}
+
+#example th, #example td {
+    padding: 3px 5px;
+}
+
+    #example td:hover {
+        cursor: pointer;
+    }

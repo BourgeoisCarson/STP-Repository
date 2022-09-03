@@ -1,0 +1,68 @@
+﻿.horizontal-timeline .items {
+    border-top: 3px solid #e9ecef;
+}
+
+    .horizontal-timeline .items .items-list {
+        display: block;
+        position: relative;
+        text-align: center;
+        padding-top: 70px;
+        margin-right: 0;
+    }
+
+        .horizontal-timeline .items .items-list:before {
+            content: "";
+            position: absolute;
+            height: 36px;
+            border-right: 2px dashed #dee2e6;
+            top: 0;
+        }
+
+        .horizontal-timeline .items .items-list .event-date {
+            position: absolute;
+            top: 36px;
+            left: 0;
+            right: 0;
+            width: 75px;
+            margin: 0 auto;
+            font-size: .9rem;
+            padding-top: 8px;
+        }
+
+@media (min-width: 1140px) {
+    .horizontal-timeline .items .items-list {
+        display: inline-block;
+        width: 24%;
+        padding-top: 45px;
+    }
+
+        .horizontal-timeline .items .items-list .event-date {
+            top: -40px;
+        }
+}
+
+.horizontal-scrollable > .row {
+    overflow-x: auto;
+    white-space: nowrap;
+}
+
+    .horizontal-scrollable > .row > .col-xs-4 {
+        display: inline-block;
+        float: none;
+    }
+/* Decorations */
+
+.col-xs-4 {
+    color: white;
+    font-size: 24px;
+    padding-bottom: 20px;
+    padding-top: 18px;
+}
+
+    .col-xs-4:nth-child(2n+1) {
+        background: green;
+    }
+
+    .col-xs-4:nth-child(2n+2) {
+        background: black;
+    }

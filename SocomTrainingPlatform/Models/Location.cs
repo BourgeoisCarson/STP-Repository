@@ -9,15 +9,13 @@ namespace SocomTrainingPlatform.Models
     {
         public Location()
         {
-            BerthingWorks = new HashSet<BerthingWork>();
-            InsertPoints = new HashSet<InsertPoint>();
             LocationFiles = new HashSet<LocationFile>();
             LocationNotes = new HashSet<LocationNote>();
             LocationUsageDates = new HashSet<LocationUsageDate>();
-            Meetings = new HashSet<Meeting>();
-            Supports = new HashSet<Support>();
-            Targets = new HashSet<Target>();
             LocationTypess = new HashSet<LocationTypes>();
+            SiteFields = new HashSet<SiteField>();
+            LocationEvents = new HashSet<LocationEvent>();
+            EventLocations = new HashSet<EventLocation>();
         }
 
         public int Id { get; set; }
@@ -36,15 +34,14 @@ namespace SocomTrainingPlatform.Models
         public virtual Mou Mou { get; set; }
         public virtual Organization Org { get; set; }
         public virtual TrainingArea TrainingArea { get; set; }
-        public virtual ICollection<BerthingWork> BerthingWorks { get; set; }
-        public virtual ICollection<InsertPoint> InsertPoints { get; set; }
         public virtual ICollection<LocationFile> LocationFiles { get; set; }
         public virtual ICollection<LocationNote> LocationNotes { get; set; }
         public virtual ICollection<LocationUsageDate> LocationUsageDates { get; set; }
-        public virtual ICollection<Meeting> Meetings { get; set; }
-        public virtual ICollection<Support> Supports { get; set; }
-        public virtual ICollection<Target> Targets { get; set; }
         public virtual ICollection<LocationTypes> LocationTypess { get; set; }
+        public virtual ICollection<SiteField> SiteFields { get; set; }
+        public virtual ICollection<LocationEvent> LocationEvents { get; set; }
+
+        public virtual ICollection<EventLocation> EventLocations { get; set; }
 
     }
 }

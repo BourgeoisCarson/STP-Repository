@@ -1,8 +1,215 @@
-﻿@{
+﻿@model SocomTrainingPlatform.Models.HomeModels.HomeIndexModel
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="row" style="padding-top:15px">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header p-2">
+                <ul class="nav nav-pills">
+                    <li class="nav-item"><a class="nav-link active" href="#activity" data-toggle="tab">Search Sites</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#timeline" data-toggle="tab">Search Exercises</a></li>
+                </ul>
+            </div>
+            <div class="card-body">
+                <div class="tab-content">
+                    <div class="tab-pane active" id="activity">
+                        <div class="form-group" style="position:center">
+                            <label>Search By Site Name</label>
+                            <div class="input-group input-group-lg">
+                                <input type="text" id="productName" class="form-control form-control-lg" placeholder="Type your keywords here" />
+                                <div class="input-group-append">
+                                    <button type="submit" class="btn btn-lg btn-default">
+                                        <i class="fa fa-search"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group" style="position:center">
+                            <label>Search by Location & Type</label>
+                            <form method="post" asp-controller="Site" asp-action="Search" style="padding-top: 20px">
+                                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                <h6 style="text-align: center; text-decoration:underline">Location</h6>
+                                <div class="form-group">
+                                    <select asp-for="stateSearch" asp-items="ViewBag.City" class="form-control">
+                                        <option value="">Select State</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <select id="citySearch" asp-for="citySearch" class="form-control" disabled>
+                                        <option value="">Select City</option>
+                                    </select>
+                                </div>
+                                <h6 style="text-align: center; text-decoration:underline">Type</h6>
+                                <div class="form-group">
+                                    <select class="form-control" asp-for="FieldChoice" id="choice" style="width: 100%;">
+                                        <option selected="selected" id="choose">Choose...</option>
+                                        <option value="Target">Target</option>
+                                        <option value="Support">Support</option>
+                                        <option value="InsertPoint">Insert Points</option>
+                                        <option value="Berthing">Berthing/Work</option>
+                                        <option value="Meeting">Meeting</option>
+                                    </select>
+                                </div>
+                                <div id="allChoices">
+                                    <div class="form-group" id="Target">
+                                        <select id="aa" class="form-control" asp-for="TypeChoice" style="width: 100%;" disabled>
+                                            <option selected="selected">Choose...</option>
+                                            <option value="DA/Raid">DA/Raid</option>
+                                            <option value="R&S">R&S</option>
+                                            <option value="VehicleIntrediction">Vehicle Intrediction</option>
+                                            <option value="Ambush">Ambush</option>
+                                            <option value="RAA">RAA</option>
+                                            <option value="VirtualSynthetic">Virtual/Synthetic</option>
+                                            <option value="Gaf">GAF</option>
+                                            <option value="Haf">HAF</option>
+                                            <option value="Baf">Baf</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group" id="Support" style="display: none;">
+                                        <select id="bb" class="form-control" asp-for="TypeChoice" style="width: 100%;">
+                                            <option selected="selected">Choose...</option>
+                                            <option value="MotorPool">Motor Pool</option>
+                                            <option value="FuelFarm">Fuel Farm</option>
+                                            <option value="Contractor">Contractor</option>
+                                            <option value="MedicalFacility">Medical Facility</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group" id="InsertPoint" style="display: none;">
+                                        <select id="cc" class="form-control" asp-for="TypeChoice" style="width: 100%;">
+                                            <option selected="selected">Choose...</option>
+                                            <option value="Airfield/Runway">Airfield/Runway</option>
+                                            <option value="DZ">DZ</option>
+                                            <option value="HLZ">HLZ</option>
+                                            <option value="SplashPoint">SplashPoint</option>
+                                            <option value="VDO/Lagger">VDO/Lagger</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group" id="Berthing" style="display: none;">
+                                        <select id="dd" class="form-control" asp-for="TypeChoice" style="width: 100%;">
+                                            <option selected="selected">Choose...</option>
+                                            <option value="ECG">ECG</option>
+                                            <option value="SOTF/HHQ">SOTF/HHQ</option>
+                                            <option value="Company">Company</option>
+                                            <option value="TeamSite">Team Site</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group" id="Meeting" style="display: none;">
+                                        <select id="ee" class="form-control" asp-for="TypeChoice" style="width: 100%;">
+                                            <option selected="selected">Choose...</option>
+                                            <option value="SA">SA</option>
+                                            <option value="KLE">KLE</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <input type="submit" value="Filter" class="btn btn-primary" />
+                                </div>
+                                </>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="timeline">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <div class="form-group" style="position:center; padding-bottom:15px">
+                    <a asp-controller="Site" asp-action="Create" type="button" class="btn btn-lg btn-block btn-default"><b>Create New Site</b></a>
+                </div>
+                <div class="form-group" style="position: center; padding-bottom: 15px">
+                    <a asp-controller="Excercise" asp-action="CreateExcercise"  type="button" class="btn btn-lg btn-block btn-default"><b>Create New Exercise</b></a>
+                </div>
+                <div class="form-group" style="position: center; padding-bottom: 15px">
+                    <a asp-controller="Mou" asp-action="Create" type="button" class="btn btn-lg btn-block btn-default"><b>Create New MOU</b></a>
+                </div>
+                <div class="form-group" style="position: center; padding-bottom: 15px">
+                    <a asp-controller="Poc" asp-action="Create" type="button" class="btn btn-lg btn-block btn-default"><b>Create New Contact</b></a>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script src="~/plugins/toastr/toastr.min.js"></script>
+    <script src="~/plugins/sweetalert2/sweetalert2.min.js"></script>
+    <script src="~/dist/js/demo.js"></script>
+    <script>
+        $("#choice").change(function () {
+            $("#aa,#bb,#cc,#dd,#ee").val([]);
+
+
+            if ($(this).val() == "Target") {
+                $("#aa").attr("disabled", false);
+                $("#Support,#InsertPoint,#Berthing,#Meeting").hide();
+                $("#Target").show();
+            }
+            else if ($(this).val() == "Support") {
+                $("#Target,#InsertPoint,#Berthing,#Meeting").hide();
+                $("#Support").show();
+            }
+            else if ($(this).val() == "InsertPoint") {
+                $("#Support,#Target,#Berthing,#Meeting").hide();
+                $("#InsertPoint").show();
+            }
+            else if ($(this).val() == "Berthing") {
+                $("#Support,#InsertPoint,#Target,#Meeting").hide();
+                $("#Berthing").show();
+            }
+            else if ($(this).val() == "Meeting") {
+                $("#Support,#InsertPoint,#Berthing,#Target").hide();
+                $("#Meeting").show();
+            }
+        });
+
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            setTimeout('$("#alert").hide()', 2000);
+        });
+    </script>
+
+    <script>
+    var stateOpt = @Html.Raw(Json.Serialize(ViewData["stateSearch"]));
+    var cityOpt = @Html.Raw(Json.Serialize(ViewData["citySearch"]));
+    </script>
+    <script>
+        $(function () {
+            $("select#stateSearch").change(function () {
+                var cid = $(this).val();
+                $("select#citySearch").attr("disabled", false);
+
+                $("select#citySearch").empty();
+                $("select#citySearch").append(`<option value="${"Select City"}">${"Select City"}</option>`)
+
+                $.getJSON(`/Site/GetCitys?cid=${cid}`, function (data) {
+                    console.log(data);
+                    $.each(data, function (i, item) {
+                        $("select#citySearch").append(`<option value="${item.id}">${item.name}</option>`);
+                    });
+                });
+            })
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            $('#productName').autocomplete({
+                source: '/Site/Suggest',
+                select: function (event, ui) {
+                    window.location.href = "/Site/SearchRedirect?name=" + ui.item.label;
+                }
+            });
+        });
+    </script>
+
+}

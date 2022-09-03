@@ -2,8 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using RavenSiteSurvey.BuisnessLogic;
-using RavenSiteSurvey.Repositories;
 using SocomTrainingPlatform.Models;
 using SocomTrainingPlatform.Models.ExcerciseModels;
 using System;
@@ -18,17 +16,12 @@ namespace SocomTrainingPlatform.Controllers
     {
 
         private readonly SocomTrainingPlatformContext _context;
-        private readonly LocRepo locRepo;
-        private readonly SiteLogic dashLogic;
         //private readonly AddFieldsRepo addFields;
 
 
         public AdminController(SocomTrainingPlatformContext context)
         {
             _context = context;
-            locRepo = new LocRepo(context);
-            //addFields = new AddFieldsRepo(context);
-            dashLogic = new SiteLogic(context);
         }
 
         // GET: AdminController

@@ -1,0 +1,353 @@
+﻿@model SocomTrainingPlatform.Models.ExerciseEventModels.EventDetailsModel
+@{ ViewData["Title"] = "Excercise Details Details";
+    Layout = "~/Views/Shared/AdminLayout/_Layout.cshtml";
+}
+@if (ViewBag.Alert != null)
+{
+    <div class="row" id="alert" display="none">
+        <div class="col-md-12">
+            <div class="form-group">
+                @Html.Raw(@ViewBag.Alert)
+            </div>
+        </div>
+    </div>
+}
+<div class="container-fluid py-4" style="background-color:white; box-shadow: 0 4px 2px -2px gray">
+    <div class="row">
+        <a href="#">Back to Exercise: Name</a>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <h5 class="align-content-center">@Html.DisplayFor(model => model.Event.EventName)</h5>
+        </div>
+        <div style="padding-right: 10px">
+            <h5>@Model.Event.StartTime.ToString(string.Format("MM/dd/yyyy")) - @Model.Event.EndTime.ToString(string.Format("MM/dd/yyyy"))</h5>
+        </div>
+    </div>
+</div>
+<div class="container-fluid py-4">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header border-0">
+                    <h3 class="card-title">Locations</h3>
+                    <div class="card-tools">
+                        <a href="#" class="btn btn-tool btn-sm" data-toggle="modal" data-target="#modal-addLocation">
+                            <i class="fas fa-plus"></i>
+                        </a>
+                    </div>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body" style="height: 300px;">
+
+                    @if (Model.Locations != null)
+                    {
+                @foreach (var item in Model.Locations)
+                {
+                <div class="card">
+                    <div class="card-header border-0">
+                        <div class="row">
+                            <h5><strong></strong>@item.FieldName / @item.FieldType</h5>
+                            <div style="position:absolute; right:5px" class="btn-group">
+                                <a style="float:right" href="#" type="button" class="btn btn-default" data-toggle="dropdown">
+                                    <i class="fas fa-ellipsis-v"></i>
+                                </a>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a asp-action="EditSiteField" asp-route-id="">Edit Field</a></li>
+                                    <li><a style="color:red" asp-action="DeleteSiteField" asp-route-id="">Delete Field</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Dates: </strong>@item.StartDate - @item.EndDate</p>
+                        <p><strong>Description: </strong>@item.Description</p>
+                        <p><a href="#">@item.LocationName</a></p>
+                    </div>
+                </div>
+                }}
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header border-0">
+                    <h3 class="card-title">Documents</h3>
+                    <div class="card-tools">
+                        <a href="#" class="btn btn-tool btn-sm" data-toggle="modal" data-target="#modal-addDocument">
+                            <i class="fas fa-plus"></i>
+                        </a>
+                    </div>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body" data-mdb-perfect-scrollbar="true" style="position: relative; height: 400px">
+
+                    <table class="table mb-0">
+                        <thead>
+                            <tr>
+                                <th scope="col">Name</th>
+                                <th scope="col">Upload Date</th>
+                                <th scope="col"></th>
+                                <th scope="col"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.Documents != null)
+                            {
+                                { int eventCount = 1; }
+                @foreach (var item in Model.Documents)
+                {
+<tr class="fw-normal">
+    <td>
+        <small><strong>@item.Name</strong></small>
+    </td>
+    <th>
+        <small>@item.UploadDate</small>
+    </th>
+    <td>
+    </td>
+    <th>
+        <a href="#" data-toggle="modal" data-target="#modal-ExerciseEventEdit" data-name="@item.Name" data-date="@item.UploadDate" data-id="@item.Id">
+            <i class="fas fa-edit"></i>
+        </a>
+        <a data-btn="DeleteExerciseEvent" asp-action="DeleteExerciseEvent" asp-route-id="@item.Id">
+            <i class="fas fa-trash-alt text-danger"></i>
+        </a>
+    </th>
+</tr>
+}}
+
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header border-0">
+                    <h3 class="card-title">Checklists</h3>
+                    <div class="card-tools">
+                        <a href="#" class="btn btn-tool btn-sm" data-toggle="modal" data-target="#modal-addChecklist">
+                            <i class="fas fa-plus"></i>
+                        </a>
+                    </div>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body" style="height:fit-content;">
+                    @if (Model.AllCheckLists != null)
+                    {
+        @foreach (var item in Model.AllCheckLists)
+        {
+<div class="card" style="border-radius: 15px;">
+    <div class="card-body p-5">
+        <h5 class="mb-3"><strong>@item.Checklist.Name</strong></h5>
+        <form class="d-flex justify-content-center align-items-center mb-4">
+            <div class="row">
+                <div class="form-outline flex-fill">
+                    <input type="text" id="form3" class="form-control form-control-lg" />
+                </div>
+                <button type="submit" class="btn btn-primary btn-lg ms-2">Add</button>
+            </div>
+        </form>
+        <ul class="list-group mb-0">
+            @foreach (var items in item.Items)
+            {
+                @if (items.Completed == true)
+                {
+                    <li class="list-group-item d-flex justify-content-between align-items-center border-start-0 border-top-0 border-end-0 border-bottom rounded-0 mb-2">
+                        <div class="d-flex align-items-center">
+                            <input class="form-check-input me-2" type="checkbox" value="" aria-label="..." checked />
+                            <s>@items.ItemName</s>
+                        </div>
+                        <a href="#!" data-mdb-toggle="tooltip" title="Remove item">
+                            <i class="fas fa-times text-primary"></i>
+                        </a>
+                    </li>
+                }
+                else
+                {
+                    <li class="list-group-item d-flex justify-content-between align-items-center border-start-0 border-top-0 border-end-0 border-bottom rounded-0 mb-2">
+                        <div class="d-flex align-items-center">
+                            <input class="form-check-input me-2" type="checkbox" value="" aria-label="..." />
+                            @items.ItemName
+                        </div>
+                        <a href="#!" data-mdb-toggle="tooltip" title="Remove item">
+                            <i class="fas fa-times text-primary"></i>
+                        </a>
+                    </li>
+                }
+
+            }
+
+        </ul>
+    </div>
+</div>}}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header border-0">
+                    <h3 class="card-title">Event Details</h3>
+                    <div class="card-tools">
+                    </div>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body">
+                    <strong><i class=""></i>Event Name</strong>
+                    <ul>
+                        <li>@Model.Event.EventName</li>
+                    </ul>
+                    <hr>
+                    <strong>Event Dates</strong>
+                    <ul>
+                        <li>@Model.Event.StartTime / @Model.Event.EndTime</li>
+                    </ul>
+                    <hr>
+                    <strong>Description</strong>
+                    <ul>
+                        <li>@Model.Event.EventDescription</li>
+                    </ul>
+                    <hr>
+                    <strong>Exercise</strong>
+                    <ul>
+                        <li><a asp-controller="Excercise" asp-action="Details" asp-route-id="@Model.Exercise.Id">@Model.Exercise.TypeName</a></li>
+                    </ul>
+
+                </div>
+                <!-- /.card-body -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal-addChecklist">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Create New Checklist</h4>
+                <button class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="UpdateExerciseEvent" method="post" asp-action="AddChecklist" asp-route-id="@Model.EventId">
+                <div class="modal-body">
+                    <input type="hidden" asp-for="EventId" id="ExEventId" />
+                    <div class="col-md-10">
+                        <div class="form-group" style="padding-top: 15px;">
+                            <label class="control-label">New Checklist Name</label>
+                            <input asp-for="ChecklistName" class="form-control" />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <input type="submit" value="Create" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modal-addDocument">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Add New Event Document</h4>
+                <button class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="UpdateExerciseEvent" method="post" asp-action="AddDoc" asp-route-id="@Model.EventId">
+                <div class="modal-body">
+                    <input type="hidden" asp-for="EventId" id="ExEventId" />
+                    <div class="col-md-10">
+                        <div class="form-group" style="padding-top: 15px;">
+                            <label class="control-label">Document Name</label>
+                            <input asp-for="DocumentName" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Choose File</label>
+                        <input asp-for="@Model.Data" class="form-control" accept=".pdf" type="file" />
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <input type="submit" value="Submit" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modal-addLocation">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Add Location</h4>
+                <button class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="AddLocationEvent" method="post" asp-action="AddLocation" asp-route-id="@Model.EventId">
+                <div class="modal-body">
+                    <div class="col-md-10">
+                        <div class="form-group" style="padding-top: 15px;">
+                            <label class="control-label">Search Location</label>
+                            <div class="input-group input-group-lg">
+                                <input type="text" asp-for="LocationName" id="productName" class="form-control form-control-lg" placeholder="Enter Location Name..." />
+                                <div class="input-group-append">
+                                    <button type="submit" class="btn btn-lg btn-default">
+                                        <i class="fa fa-search"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Location Field</label>
+                            <select id="citySearch" asp-for="FieldName" class="form-control" disabled>
+                                <option value="">Field Choice</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Description (What this field is being used for)</label>
+                            <textarea class="form-control" asp-for="Description">
+                            </textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Start Date</label>
+                            <input asp-for="StartDate" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">End Date</label>
+                            <input asp-for="EndDate" class="form-control" />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <input type="submit" value="Add Location" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+<script>$(document).ready(function () {
+            $('#productName').autocomplete({
+                source: '/Site/Suggest',
+                appendTo: $('#modal-addLocation'),
+                select: function (event, ui) {
+                    $("select#citySearch").empty();
+                    $.getJSON(`/Excercise/GetSiteFields?cid=${ui.item.label}`, function (data) {
+                        console.log(data);
+                        $.each(data, function (i, item) {
+                            $("select#citySearch").append(`<option value="${item.id}">${item.name}</option>`);
+                        });
+                    });
+                    $("select#citySearch").attr("disabled", false);
+                },
+            });
+});
+    </script>
+<script>
+    $(document).ready(function () {
+        setTimeout('$("#alert").hide()', 3000);
+    });
+</script>
+}

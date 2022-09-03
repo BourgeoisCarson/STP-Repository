@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using X.PagedList;
 
 namespace SocomTrainingPlatform.Models.ExcerciseModels
 {
@@ -19,8 +20,20 @@ namespace SocomTrainingPlatform.Models.ExcerciseModels
     public class ExcerciseIndex
     {
         public List<ExcerciseSearchModel> SearchModel { get; set; }
-        public int Pages { get; set; }
-        public int CurrentPage { get; set; }
         public string ExcerciseChoice { get; set; }
+        public int itemPerPage { get; set; }
+        public int CurrentPage { get; set; }
+        public int Page { get; set; }
+        public string searchText { get; set; }
+        public List<Location> AllLocations { get; set; }
+        public int PageCount()
+        {
+            return Convert.ToInt32(Math.Ceiling(SearchModel.Count() / (double)itemPerPage));
+        }
+        public List<ExcerciseSearchModel> PaginatedModel()
+        {
+            int start = (CurrentPage - 1) * itemPerPage;
+            return SearchModel.OrderByDescending(b => b.ExcerciseId).Skip(start).Take(itemPerPage).ToList();
+        }
     }
 }

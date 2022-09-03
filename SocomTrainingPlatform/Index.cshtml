@@ -1,0 +1,508 @@
+﻿
+
+@model SocomTrainingPlatform.Models.DashboardModels.DashboardViewModels.DashboardVm
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/AdminLayout/_Layout.cshtml";
+}
+<div class="row" id="alert">
+    <div class="col-md-12">
+        <div class="form-group">
+            @Html.Raw(@ViewBag.Alert)
+        </div>
+    </div>
+</div>
+@*<div class="row" style="padding-top: 10px">
+        <div class="col-md-4">
+            <div class="card card-primary">
+                <div class="card-header" style="background-color:lightgray">
+                    <h3 class="card-title" style="color:black">Training Areas</h3>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                Shelby/Lucedale <span class="float-right">(9 Locations)</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                Poplarville <span class="float-right">(6 Locations)</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                Stennis Tyonek <span class="float-right">(8 Locations)</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                Biloxi <span class="float-right">(13 Locations)</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card card-primary">
+                <div class="card-header" style="background-color:lightgray">
+                    <h3 class="card-title" style="color:black">Locations In Use</h3>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                St. Tammany Parish <span class="float-right">03/06 - 04/01</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                Ashe Nursey <span class="float-right">03/04 - 03/25</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                Fire House <span class="float-right">03/01 - 03/22</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card card-primary">
+                <div class="card-header" style="background-color:lightgray">
+                    <h3 class="card-title" style="color:black">Active Training Events</h3>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                RAVEN <span class="float-right">01/11 - 03/20</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                Derna Bridge <span class="float-right">02/07 - 03/06</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                TRX2 <span class="float-right">02/19 - 03/02</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>*@
+<div class="form-group" style="padding-top: 15px;">
+    <a asp-action="Create" class="btn btn-primary">Create New Site</a>
+</div>
+<div class="form-group" style="padding-top: 15px;">
+        <div class="input-group input-group-lg">
+            <input type="search" id="SiteSearch" class="form-control form-control-lg" placeholder="Type your keywords here">
+            <div class="input-group-append">
+                <button type="submit" class="btn btn-lg btn-default">
+                    <i class="fa fa-search"></i>
+                </button>
+            </div>
+        </div>
+</div>
+<div class="row">
+    <div class="col-md-2">
+        <form method="post" asp-action="Index" style="padding-top: 20px">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            @*<div class="form-group">
+                @Html.DropDownList("stateSearch", (IEnumerable<SelectListItem>)(ViewData["State"]), "All States", new { @class = "form-control" })
+            </div>
+            <div class="form-group">
+                @Html.DropDownList("citySearch", (IEnumerable<SelectListItem>)(ViewData["City"]), "All Cities", new { @class = "form-control" })
+            </div>*@
+        <div class="form-group">
+            <select asp-for="stateSearch" asp-items="ViewBag.City" class="form-control">
+                <option value="">Select State</option></select>
+        </div>
+        <div class="form-group">
+            <select id="citySearch" asp-for="citySearch" class="form-control" disabled>
+                <option value="">Select City</option>
+            </select>
+        </div>
+            <div>
+                <select class="form-control" asp-for="FieldChoice" id="choice" style="width: 100%;">
+                    <option selected="selected" id="choose">Choose...</option>
+                    <option value="A">Target</option>
+                    <option value="B">Support</option>
+                    <option value="C">Insert Points</option>
+                    <option value="D">Berthing/Work</option>
+                    <option value="E">Meeting</option>
+                </select>
+            </div>
+            <hr />
+            <div id="allChoices">
+                <div class="form-group" id="A" style="display: none;">
+                    <select id="aa" class="form-control" asp-for="TarChoice" style="width: 100%;">
+                        <option selected="selected">Choose...</option>
+                        <option value="DA/Raid">DA/Raid</option>
+                        <option value="R&S">R&S</option>
+                        <option value="VehicleIntrediction">Vehicle Intrediction</option>
+                        <option value="Ambush">Ambush</option>
+                        <option value="RAA">RAA</option>
+                        <option value="VirtualSynthetic">Virtual/Synthetic</option>
+                        <option value="Gaf">GAF</option>
+                        <option value="Haf">HAF</option>
+                        <option value="Baf">Baf</option>
+                    </select>
+                </div>
+                <div class="form-group" id="B" style="display: none;">
+                    <select id="bb" class="form-control" asp-for="SupChoice" style="width: 100%;">
+                        <option selected="selected">Choose...</option>
+                        <option value="MotorPool">Motor Pool</option>
+                        <option value="FuelFarm">Fuel Farm</option>
+                        <option value="Contractor">Contractor</option>
+                        <option value="MedicalFacility">Medical Facility</option>
+                    </select>
+                </div>
+                <div class="form-group" id="C" style="display: none;">
+                    <select id="cc" class="form-control" asp-for="InsChoice" style="width: 100%;">
+                        <option selected="selected">Choose...</option>
+                        <option value="Airfield/Runway">Airfield/Runway</option>
+                        <option value="DZ">DZ</option>
+                        <option value="HLZ">HLZ</option>
+                        <option value="SplashPoint">SplashPoint</option>
+                        <option value="VDO/Lagger">VDO/Lagger</option>
+                    </select>
+                </div>
+                <div class="form-group" id="D" style="display: none;">
+                    <select id="dd" class="form-control" asp-for="BerChoice" style="width: 100%;">
+                        <option selected="selected">Choose...</option>
+                        <option value="ECG">ECG</option>
+                        <option value="SOTF/HHQ">SOTF/HHQ</option>
+                        <option value="Company">Company</option>
+                        <option value="TeamSite">Team Site</option>
+                    </select>
+                </div>
+                <div class="form-group" id="E" style="display: none;">
+                    <select id="ee" class="form-control" asp-for="MetChoice" style="width: 100%;">
+                        <option selected="selected">Choose...</option>
+                        <option value="SA">SA</option>
+                        <option value="KLE">KLE</option>
+                    </select>
+                </div>
+            </div>
+
+            @*<div class="form-group">
+            @Html.DropDownList("targetSearch", (IEnumerable<SelectListItem>)(ViewBag.Target), "All Target Fields", new { @class = "form-control" })
+        </div>
+        <div class="form-group">
+            @Html.DropDownList("insertPoint", (IEnumerable<SelectListItem>)(ViewBag.InsertPoint), "All Insert Points", new { @class = "form-control" })
+        </div>
+        <div class="form-group">
+            @Html.DropDownList("berthingWork", (IEnumerable<SelectListItem>)(ViewBag.BerthingWork), "All Berthing/Work", new { @class = "form-control" })
+        </div>
+        <div class="form-group">
+            @Html.DropDownList("meeting", (IEnumerable<SelectListItem>)(ViewBag.Meeting), "All Meeting Areas", new { @class = "form-control" })
+        </div>
+        <div class="form-group">
+            @Html.DropDownList("support", (IEnumerable<SelectListItem>)(ViewBag.Support), "All Support Areas", new { @class = "form-control" })
+        </div>*@
+            <div class="form-group">
+                <input type="submit" value="Filter" class="btn btn-primary" />
+            </div>
+            @*<div class="col-md-2 form-group">
+        <button type="button" class="btn btn-default" data-toggle="modal" data-target="#modal-default">
+        Launch Default Modal
+        </button>
+        </div>*@
+            </>
+        </form>
+    </div>
+    @*<div class="col-md-10">
+        <div class="container-fluid py-4">
+            @foreach (var item in Model.FinalFilterModel)
+            {
+                <div class="card bg-light d-flex flex-fill">
+                    <div class="card-body pt-0">
+                        <div class="row">
+                            <div class="col-md-6" style="border-right: 1px #ff0000">
+                                <h4><a asp-action="Details" asp-route-id="@item.Location.Id">@item.Location.Name</a></h4>
+                                <h5>@item.Location.StreetAddress, @item.Location.City, @item.Location.State</h5>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row">
+                                    @if (item.Target != null && item.Target.DaRaid == true)
+                                    {
+                                        <div style="padding-top: 10px; padding-right: 10px;">
+                                            <p style="width:min-content; border: black; border-width: 0px; border-style: solid; background-color: lightgrey; border-radius: 5px; text-align: center">DA/Raid</p>
+                                        </div>
+                                    }
+                                    @if (item.Target != null && item.Target.Ambush == true)
+                                    {
+                                        <div style="padding-top: 10px; padding-right: 10px;">
+                                            <p style="width:fit-content; border: black; border-width: 0px; border-style: solid; background-color: lightgrey; border-radius: 5px; text-align: center">Ambush</p>
+                                        </div>
+                                    }
+                                    @if (item.Target != null && item.Target.Raa == true)
+                                    {
+                                        <div style="padding-top: 10px; padding-right: 10px;">
+                                            <p style="width:fit-content; border: black; border-width: 0px; border-style: solid; background-color: lightgrey; border-radius: 5px; text-align: center">RAA</p>
+                                        </div>
+                                    }
+                                    @if (item.Target != null && item.Target.Rs == true)
+                                    {
+                                        <div style="padding-top: 10px; padding-right: 10px;">
+                                            <p style="width:fit-content; border: black; border-width: 0px; border-style: solid; background-color: lightgrey; border-radius: 5px; text-align: center">RS</p>
+                                        </div>
+                                    }
+                                    @if (item.Target != null && item.Target.Baf == true)
+                                    {
+                                        <div style="padding-top: 10px; padding-right: 10px;">
+                                            <p style="width:fit-content; border: black; border-width: 0px; border-style: solid; background-color: lightgrey; border-radius: 5px; text-align: center">BAF</p>
+                                        </div>
+                                    }
+                                    @if (item.Target != null && item.Target.Haf == true)
+                                    {
+                                        <div style="padding-top: 10px; padding-right: 10px;">
+                                            <p style="width:fit-content; border: black; border-width: 0px; border-style: solid; background-color: lightgrey; border-radius: 5px; text-align: center">HAF</p>
+                                        </div>
+                                    }
+                                    @if (item.Target != null && item.Target.Gaf == true)
+                                    {
+                                        <div style="padding-top: 10px; padding-right: 10px;">
+                                            <p style="width:fit-content; border: black; border-width: 0px; border-style: solid; background-color: lightgrey; border-radius: 5px; text-align: center">GAF</p>
+                                        </div>
+                                    }
+                                    @if (item.Target != null && item.Target.VehicleIntrediction == true)
+                                    {
+                                        <div style="padding-top: 10px; padding-right: 10px;">
+                                            <p style="width:fit-content; border: black; border-width: 0px; border-style: solid; background-color: lightgrey; border-radius: 5px; text-align: center">Vehicle Intrediction</p>
+                                        </div>
+                                    }
+                                    @if (item.Target != null && item.Target.VirtualSynthetic == true)
+                                    {
+                                        <div style="padding-top: 10px; padding-right: 10px;">
+                                            <p style="width:fit-content; border: black; border-width: 0px; border-style: solid; background-color: lightgrey; border-radius: 5px; text-align: center">Virtual Synthetic</p>
+                                        </div>
+                                    }
+                                    @if (item.InsertPoint != null && item.InsertPoint.AirfieldRunway == true)
+                                    {
+                                        <div style="padding-top: 10px; padding-right: 10px;">
+                                            <p style="width:fit-content; border: black; border-width: 0px; border-style: solid; background-color: lightgrey; border-radius: 5px; text-align: center">Airfeild/Runway</p>
+                                        </div>
+                                    }
+                                    @if (item.InsertPoint != null && item.InsertPoint.Bls == true)
+                                    {
+                                        <div style="padding-top: 10px; padding-right: 10px;">
+                                            <p style="width:fit-content; border: black; border-width: 0px; border-style: solid; background-color: lightgrey; border-radius: 5px; text-align: center">BLS</p>
+                                        </div>
+                                    }
+                                    @if (item.InsertPoint != null && item.InsertPoint.Dz == true)
+                                    {
+                                        <div style="padding-top: 10px; padding-right: 10px;">
+                                            <p style="width:fit-content; border: black; border-width: 0px; border-style: solid; background-color: lightgrey; border-radius: 5px; text-align: center">DZ</p>
+                                        </div>
+                                    }
+                                    @if (item.InsertPoint != null && item.InsertPoint.Hlz == true)
+                                    {
+                                        <div style="padding-top: 10px; padding-right: 10px;">
+                                            <p style="width:fit-content; border: black; border-width: 0px; border-style: solid; background-color: lightgrey; border-radius: 5px; text-align: center">HLZ</p>
+                                        </div>
+                                    }
+                                    @if (item.InsertPoint != null && item.InsertPoint.SplashPoint == true)
+                                    {
+                                        <div style="padding-top: 10px; padding-right: 10px;">
+                                            <p style="width:fit-content; border: black; border-width: 0px; border-style: solid; background-color: lightgrey; border-radius: 5px; text-align: center">Splash Point</p>
+                                        </div>
+                                    }
+
+                                    @if (item.Support != null && item.Support.Contractor == true)
+                                    {
+                                        <div style="padding-top: 10px; padding-right: 10px;">
+                                            <p style="width:fit-content; border: black; border-width: 0px; border-style: solid; background-color: lightgrey; border-radius: 5px; text-align: center">Contractor</p>
+                                        </div>
+                                    }
+                                    @if (item.Support != null && item.Support.FuelFarm == true)
+                                    {
+                                        <div style="padding-top: 10px; padding-right: 10px;">
+                                            <p style="width:fit-content; border: black; border-width: 0px; border-style: solid; background-color: lightgrey; border-radius: 5px; text-align: center">Fuel Farm</p>
+                                        </div>
+                                    }
+                                    @if (item.Support != null && item.Support.MedicalFacility == true)
+                                    {
+                                        <div style="padding-top: 10px; padding-right: 10px;">
+                                            <p style="width:fit-content; border: black; border-width: 0px; border-style: solid; background-color: lightgrey; border-radius: 5px; text-align: center">Medical Facility</p>
+                                        </div>
+                                    }
+                                    @if (item.Support != null && item.Support.MotorPool == true)
+                                    {
+                                        <div style="padding-top: 10px; padding-right: 10px;">
+                                            <p style="width:fit-content; border: black; border-width: 0px; border-style: solid; background-color: lightgrey; border-radius: 5px; text-align: center">Motor Pool</p>
+                                        </div>
+                                    }
+                                    @if (item.BerthingWork != null && item.BerthingWork.Company == true)
+                                    {
+                                        <div style="padding-top: 10px; padding-right: 10px;">
+                                            <p style="width:fit-content; border: black; border-width: 0px; border-style: solid; background-color: lightgrey; border-radius: 5px; text-align: center">Company</p>
+                                        </div>
+                                    }
+                                    @if (item.BerthingWork != null && item.BerthingWork.Ecg == true)
+                                    {
+                                        <div style="padding-top: 10px; padding-right: 10px;">
+                                            <p style="width:fit-content; border: black; border-width: 0px; border-style: solid; background-color: lightgrey; border-radius: 5px; text-align: center">ECG</p>
+                                        </div>
+                                    }
+                                    @if (item.BerthingWork != null && item.BerthingWork.SotfHq == true)
+                                    {
+                                        <div style="padding-top: 10px; padding-right: 10px;">
+                                            <p style="width:fit-content; border: black; border-width: 0px; border-style: solid; background-color: lightgrey; border-radius: 5px; text-align: center">SOTF/HQ</p>
+                                        </div>
+                                    }
+                                    @if (item.BerthingWork != null && item.BerthingWork.TeamSite == true)
+                                    {
+                                        <div style="padding-top: 10px; padding-right: 10px;">
+                                            <p style="width:fit-content; border: black; border-width: 0px; border-style: solid; background-color: lightgrey; border-radius: 5px; text-align: center">Team Site</p>
+                                        </div>
+                                    }
+                                    @if (item.Meeting != null && item.Meeting.Kle == true)
+                                    {
+                                        <div style="padding-top: 10px; padding-right: 10px;">
+                                            <p style="width:fit-content; border: black; border-width: 0px; border-style: solid; background-color: lightgrey; border-radius: 5px; text-align: center">KLE</p>
+                                        </div>
+                                    }
+                                    @if (item.Meeting != null && item.Meeting.Sa == true)
+                                    {
+                                        <div style="padding-top: 10px; padding-right: 10px;">
+                                            <p style="width:fit-content; border: black; border-width: 0px; border-style: solid; background-color: lightgrey; border-radius: 5px; text-align: center">SA</p>
+                                        </div>
+                                    }
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            }
+        </div>
+    </div>*@
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script src="~/plugins/toastr/toastr.min.js"></script>
+    <script src="~/plugins/sweetalert2/sweetalert2.min.js"></script>
+    <script src="~/dist/js/demo.js"></script>
+    <script>
+        $(function () {
+            var Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000
+            });
+
+            $('.swalDefaultSuccess').click(function () {
+                Toast.fire({
+                    icon: 'success',
+                    title: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
+                })
+            });
+        });
+    </script>
+
+    <script src='https://api.mapbox.com/mapbox-gl-js/v2.2.0/mapbox-gl.js'></script>
+    <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.7.0/mapbox-gl-geocoder.min.js"></script>
+    <script>
+    mapboxgl.accessToken = 'pk.eyJ1IjoiY2Fyc29uYm91cmdlb2lzIiwiYSI6ImNrb2dpamRybzBuOHAycG85bTczZmVreTQifQ.htIKDF3etzcH0j0MN8VUJg';
+        var points = @ViewBag.geopoints;
+        var features = Array;
+
+        var geojson = {
+            "type": "FeatureCollection",
+            "features": [{
+                "properties": {},
+                "type": "Feature",
+                "geometry": {
+                    "type": "MultiPoint",
+                    "coordinates": [points]
+                }
+            }]
+        };
+
+        var map = new mapboxgl.Map({
+            container: 'map',
+            style: 'mapbox://styles/mapbox/streets-v11',
+            center: ['87', '13'],
+            zoom: 12,
+            });
+
+
+
+         var marker =  new mapboxgl.Marker(geojson)
+            .setLngLat(geojson.features.geometry.coordinates)
+            .addTo(map);
+
+    </script>
+
+    <script>
+        $("#choice").change(function () {
+            $("#aa,#bb,#cc,#dd,#ee").val([]);
+            $("#A,#B,#C,#D,#E").hide();
+
+            if ($(this).val() == "A") {
+                $("#A").show();
+            }
+            else if ($(this).val() == "B") {
+                $("#B").show();
+            }
+            else if ($(this).val() == "C") {
+                $("#C").show();
+            }
+            else if ($(this).val() == "D") {
+                $("#D").show();
+            }
+            else if ($(this).val() == "E") {
+                $("#E").show();
+            }
+        });
+
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            setTimeout('$("#alert").hide()', 2000);
+        });
+    </script>
+
+    <script>
+    var stateOpt = @Html.Raw(Json.Serialize(ViewData["stateSearch"]));
+    var cityOpt = @Html.Raw(Json.Serialize(ViewData["citySearch"]));
+    </script>
+       
+    <script>
+        $(function () {
+            $("select#stateSearch").change(function () {
+                var cid = $(this).val();
+                $("select#citySearch").attr("disabled", false);
+                
+                $("select#citySearch").empty();
+                $("select#citySearch").append(`<option value="${"Select City"}">${"Select City"}</option>`)
+
+                $.getJSON(`/Site/GetCitys?cid=${cid}`, function (data) {
+                    console.log(data);
+                    $.each(data, function (i, item) {
+                        $("select#citySearch").append(`<option value="${item.id}">${item.name}</option>`);
+                    });
+                });
+            })
+        });
+    </script>
+
+
+}

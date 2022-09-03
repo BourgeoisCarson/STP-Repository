@@ -13,12 +13,6 @@ namespace SocomTrainingPlatform.Models
     {
         public Location location { get; set; }
         public PointOfContact poc { get; set; }
-        public Target target { get; set; }
-        public InsertPoint insertPoint { get; set; }
-        //public TrainingAreaType trainingType { get; set; }
-        public Support support { get; set; }
-        public BerthingWork berthingWork { get; set; }
-        public Meeting meeting { get; set; }
         public List<LocationNote> note { get; set; }
 
         public List<Excercise> Excercises { get; set; }

@@ -1,0 +1,283 @@
+﻿@using SocomTrainingPlatform.Common
+@model SocomTrainingPlatform.Models.ExcerciseModels.EventStep1
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/AdminLayout/_Layout.cshtml";
+}
+<div class="row" style="padding-top:15px">
+    <h2 style="position:center">
+        Add A New Location to Event
+    </h2>
+</div>
+            <div class="card" style="padding-top:15px">
+                <div class="row">
+                    <div class="col-md-2" style="background-color:white">
+                        <form method="post" asp-action="Search" style="padding-top: 20px">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <h6 style="text-align: center; text-decoration:underline">Location</h6>
+                            <div class="form-group">
+                                <select asp-for="stateSearch" asp-items="ViewBag.City" class="form-control">
+                                    <option value="">Select State</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <select id="citySearch" asp-for="citySearch" class="form-control" disabled>
+                                    <option value="">Select City</option>
+                                </select>
+                            </div>
+                            <h6 style="text-align: center; text-decoration:underline">Type</h6>
+                            <div class="form-group">
+                                <select class="form-control" asp-for="FieldChoice" id="choice" style="width: 100%;">
+                                    <option selected="selected" id="choose">Choose...</option>
+                                    <option value="Target">Target</option>
+                                    <option value="Support">Support</option>
+                                    <option value="InsertPoint">Insert Points</option>
+                                    <option value="Berthing">Berthing/Work</option>
+                                    <option value="Meeting">Meeting</option>
+                                </select>
+                            </div>
+                            <div id="allChoices">
+                                <div class="form-group" id="Target">
+                                    <select id="aa" class="form-control" asp-for="TypeChoice" style="width: 100%;" disabled>
+                                        <option selected="selected">Choose...</option>
+                                        <option value="DA/Raid">DA/Raid</option>
+                                        <option value="R&S">R&S</option>
+                                        <option value="VehicleIntrediction">Vehicle Intrediction</option>
+                                        <option value="Ambush">Ambush</option>
+                                        <option value="RAA">RAA</option>
+                                        <option value="VirtualSynthetic">Virtual/Synthetic</option>
+                                        <option value="Gaf">GAF</option>
+                                        <option value="Haf">HAF</option>
+                                        <option value="Baf">Baf</option>
+                                    </select>
+                                </div>
+                                <div class="form-group" id="Support" style="display: none;">
+                                    <select id="bb" class="form-control" asp-for="TypeChoice" style="width: 100%;">
+                                        <option selected="selected">Choose...</option>
+                                        <option value="MotorPool">Motor Pool</option>
+                                        <option value="FuelFarm">Fuel Farm</option>
+                                        <option value="Contractor">Contractor</option>
+                                        <option value="MedicalFacility">Medical Facility</option>
+                                    </select>
+                                </div>
+                                <div class="form-group" id="InsertPoint" style="display: none;">
+                                    <select id="cc" class="form-control" asp-for="TypeChoice" style="width: 100%;">
+                                        <option selected="selected">Choose...</option>
+                                        <option value="Airfield/Runway">Airfield/Runway</option>
+                                        <option value="DZ">DZ</option>
+                                        <option value="HLZ">HLZ</option>
+                                        <option value="SplashPoint">SplashPoint</option>
+                                        <option value="VDO/Lagger">VDO/Lagger</option>
+                                    </select>
+                                </div>
+                                <div class="form-group" id="Berthing" style="display: none;">
+                                    <select id="dd" class="form-control" asp-for="TypeChoice" style="width: 100%;">
+                                        <option selected="selected">Choose...</option>
+                                        <option value="ECG">ECG</option>
+                                        <option value="SOTF/HHQ">SOTF/HHQ</option>
+                                        <option value="Company">Company</option>
+                                        <option value="TeamSite">Team Site</option>
+                                    </select>
+                                </div>
+                                <div class="form-group" id="Meeting" style="display: none;">
+                                    <select id="ee" class="form-control" asp-for="TypeChoice" style="width: 100%;">
+                                        <option selected="selected">Choose...</option>
+                                        <option value="SA">SA</option>
+                                        <option value="KLE">KLE</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <input type="submit" value="Filter" class="btn btn-primary" />
+                            </div>
+
+                        </form>
+                    </div>
+                    <div class="col-md-10">
+                        <div class="container-fluid py-4">
+                            <form action="/Summary/Index" method="post">
+                                <table class="table table-head-fixed text-nowrap">
+                                    <thead>
+                                        <tr>
+                                            <th>Location Name</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in Model.PaginatedModel())
+                                        {
+                                            <tr class="clickableRow">
+                                                @*<td myInput="">
+                                        <input type="checkbox" id="SelectedNames" value="@item.Location.Id" />
+                                    </td>*@
+                                                <td>
+                                                    @item.Location.Name
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+
+                                <input type="submit" value="Update" />
+
+                            </form>
+                        </div>
+                        <div style="position:center">
+                            <ul class="pagination">
+                                @for (int i = 1; i <= Model.PageCount(); i++)
+                                {
+                                    <li class="@(i == Model.CurrentPage ? "page-item active" : "page-item")">
+                                        <a class="page-link" onclick="submitAsPost(this.href)" href="@Url.Action("EventStep1", new { Model.stateSearch, Model.citySearch, Model.FieldChoice, Model.TypeChoice, page = i })">@i</a>
+                                    </li>
+
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                </div>                    
+            </div>
+            <div class="card" style="padding-top:15px">
+                <div class="card-header">
+                    Selected Locations
+                </div>
+                <div class="card-body">
+                    <ul id="MyUl">
+                        @foreach (var item in Model.SelectedNames)
+                        {
+                            <li>
+                                @item
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+
+
+
+
+
+
+
+
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <link rel="stylesheet" href="~/css/clickableRow.css">
+    <script src="~/plugins/toastr/toastr.min.js"></script>
+    <script src="~/plugins/sweetalert2/sweetalert2.min.js"></script>
+    <script src="~/dist/js/demo.js"></script>
+    <script>
+        $(function () {
+            var Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000
+            });
+
+            $('.swalDefaultSuccess').click(function () {
+                Toast.fire({
+                    icon: 'success',
+                    title: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
+                })
+            });
+        });
+    </script>
+
+    <script>
+        $("#choice").change(function () {
+            $("#aa,#bb,#cc,#dd,#ee").val([]);
+
+
+            if ($(this).val() == "Target") {
+                $("#aa").attr("disabled", false);
+                $("#Support,#InsertPoint,#Berthing,#Meeting").hide();
+                $("#Target").show();
+            }
+            else if ($(this).val() == "Support") {
+                $("#Target,#InsertPoint,#Berthing,#Meeting").hide();
+                $("#Support").show();
+            }
+            else if ($(this).val() == "InsertPoint") {
+                $("#Support,#Target,#Berthing,#Meeting").hide();
+                $("#InsertPoint").show();
+            }
+            else if ($(this).val() == "Berthing") {
+                $("#Support,#InsertPoint,#Target,#Meeting").hide();
+                $("#Berthing").show();
+            }
+            else if ($(this).val() == "Meeting") {
+                $("#Support,#InsertPoint,#Berthing,#Target").hide();
+                $("#Meeting").show();
+            }
+        });
+
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            setTimeout('$("#alert").hide()', 2000);
+        });
+    </script>
+
+    <script>
+    var stateOpt = @Html.Raw(Json.Serialize(ViewData["stateSearch"]));
+    var cityOpt = @Html.Raw(Json.Serialize(ViewData["citySearch"]));
+    </script>
+    <script>
+        $(function () {
+            $("select#stateSearch").change(function () {
+                var cid = $(this).val();
+                $("select#citySearch").attr("disabled", false);
+
+                $("select#citySearch").empty();
+                $("select#citySearch").append(`<option value="${"Select City"}">${"Select City"}</option>`)
+
+                $.getJSON(`/Site/GetCitys?cid=${cid}`, function (data) {
+                    console.log(data);
+                    $.each(data, function (i, item) {
+                        $("select#citySearch").append(`<option value="${item.id}">${item.name}</option>`);
+                    });
+                });
+            })
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            $('#productName').autocomplete({
+                source: '/Site/Suggest',
+                select: function (event, ui) {
+                    window.location.href = "/Site/SearchRedirect?name=" + ui.item.label;
+                }
+            });
+        });
+    </script>
+    <script>
+        $('#selectedNames').change(function () {
+            var data = $("#selectedNames").val();
+            var item = [];
+            $.each(data, function (i, item) {
+                item.push('<li><a href="yourlink?id=' + item.UserID + '">' + item.Name + '</a></li>')
+            })
+            $('#MyUl').append(items.join(''));
+        })
+    </script>
+<script>
+    $(function () {
+        $('.table tr[data-href]').each(function () {
+            $(this).css('cursor', 'pointer').hover(
+                function () {
+                    $(this).addClass('active');
+                },
+                function () {
+                    $(this).removeClass('active');
+                }).click(function () {
+                    document.location = $(this).attr('data-href');
+                }
+                );
+        });
+    });
+</script>
+
+}

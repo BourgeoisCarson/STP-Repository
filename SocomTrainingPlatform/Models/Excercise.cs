@@ -14,6 +14,8 @@ namespace SocomTrainingPlatform.Models
             ExcerciseBriefs = new HashSet<ExcerciseBrief>();
             ExcerciseNotes = new HashSet<ExcerciseNote>();
             SupportDocuments = new HashSet<SupportDocument>();
+            LocationEvents = new HashSet<LocationEvent>();
+            ExerciseEvents = new HashSet<ExerciseEvent>();
         }
 
         public int Id { get; set; }
@@ -21,13 +23,13 @@ namespace SocomTrainingPlatform.Models
 
         [DataType(DataType.Date)]
         [Display(Name = "End Date")]
-        [DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}", ApplyFormatInEditMode = true)]
+        //[DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}", ApplyFormatInEditMode = true)]
         [Column(TypeName = "date")]
         public DateTime StartDate { get; set; }
 
         [DataType(DataType.Date)]
         [Display(Name = "End Date")]
-        [DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}", ApplyFormatInEditMode = true)]
+        //[DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}", ApplyFormatInEditMode = true)]
         [Column(TypeName = "date")]
         public DateTime EndDate { get; set; }
         public int ExcerciseTypeId { get; set; }
@@ -36,5 +38,7 @@ namespace SocomTrainingPlatform.Models
         public virtual ICollection<ExcerciseBrief> ExcerciseBriefs { get; set; }
         public virtual ICollection<ExcerciseNote> ExcerciseNotes { get; set; }
         public virtual ICollection<SupportDocument> SupportDocuments { get; set; }
+        public virtual ICollection<LocationEvent> LocationEvents { get; set; }
+        public virtual ICollection<ExerciseEvent> ExerciseEvents { get; set; }
     }
 }
