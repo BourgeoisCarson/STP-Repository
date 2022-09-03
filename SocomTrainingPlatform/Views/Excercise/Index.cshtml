@@ -1,4 +1,5 @@
 ﻿
+
 @model SocomTrainingPlatform.Models.ExcerciseModels.ExcerciseIndex
 
 @{
@@ -28,51 +29,44 @@
             <div class="card">
                 <div class="card-header ui-sortable-handle border-0">
                     <h3 class="card-title">All Exercises</h3>
-                    <div class="card-tools">
-                        <ul class="pagination pagination-sm">
-                            <li>
-                                <a href="#" aria-label="Previous">
-                                    <span aria-hidden="true">&laquo;</span>
-                                </a>
-                            </li>
-                            @for (int i = 1; i <= Model.Pages; i++)
-                            {
-                                <li><a asp-Action="Index" asp-route-id="@i">@i</a></li>
-                            }
-                            <li>
-                                <a href="#" aria-label="Next">
-                                    <span aria-hidden="true">&raquo;</span>
-                                </a>
-                            </li>
-                        </ul>
-                </div>
                 <!-- /.card-header -->
-                <div class="card-body table-responsive p-0" style="height: 600px;">
-                    <table class="table table-head-fixed text-nowrap">
-                        <thead>
-                            <tr>
-                                <th>Type</th>
-                                <th>Name</th>
-                                <th>Start Date</th>
-                                <th>End Date</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var item in Model.SearchModel)
-                            {
+                    <div class="card-body table-responsive p-0" style="height: 1000px">
+                        <table class="table table-head-fixed text-nowrap">
+                            <thead>
                                 <tr>
-                                    <td>@item.ExcerciseType</td>
-                                    <td>
-                                        <a asp-action="Details" asp-route-id="@item.ExcerciseId">@item.ExcerciseName</a>
-                                    </td>
-                                    <td>@item.StartDate.ToString(string.Format("MM/dd/yyyy"))</td>
-                                    <td>@item.EndDate.ToString(string.Format("MM/dd/yyyy"))</td>
+                                    <th>Type</th>
+                                    <th>Name</th>
+                                    <th>Start Date</th>
+                                    <th>End Date</th>
                                 </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.PaginatedModel())
+                                {
+                                    <tr>
+                                        <td>@item.ExcerciseType</td>
+                                        <td>
+                                            <a asp-action="Details" asp-route-id="@item.ExcerciseId">@item.ExcerciseName</a>
+                                        </td>
+                                        <td>@item.StartDate.ToString(string.Format("MM/dd/yyyy"))</td>
+                                        <td>@item.EndDate.ToString(string.Format("MM/dd/yyyy"))</td>
+                                    </tr>
 
-                            }
-                        </tbody>
-                    </table>
-                </div>
+                                }
+                            </tbody>
+                        </table>
+                        <div style="position:center">
+                            <ul class="pagination">
+                                @for (int i = 1; i <= Model.PageCount(); i++)
+                                {
+                                    <li class="@(i == Model.CurrentPage ? "page-item active" : "page-item")">
+                                        <a class="page-link" onclick="submitAsPost(this.href)" href="@Url.Action("Index", new { Model.ExcerciseChoice, page = i })">@i</a>
+                                    </li>
+
+                                }
+                            </ul>
+                        </div>
+                    </div>
             </div>
         </div>
     </div>

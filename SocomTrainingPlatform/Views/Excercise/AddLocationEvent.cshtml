@@ -1,0 +1,37 @@
+﻿@model SocomTrainingPlatform.Models.ExcerciseModels.AddLocationVm
+
+@{
+    ViewData["Title"] = "Excercise Details Details";
+    Layout = "~/Views/Shared/AdminLayout/_Layout.cshtml";
+}
+
+<form action="/Summary/Index" method="post">
+    <table>
+        <thead>
+            <tr>
+                <th></th>
+                <th>Name</th>
+                <th>Age</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            {
+                <tr>
+                    <td>
+                        <input type="checkbox" name="SelectedNames" value="" />
+                    </td>
+                    <td>
+                        
+                    </td>
+                    <td>
+
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <input type="submit" value="Update" />
+
+</form>

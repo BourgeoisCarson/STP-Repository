@@ -6,20 +6,14 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using GeoJSON.Net.Geometry;
 using SocomTrainingPlatform.Models.SiteModels;
+using X.PagedList;
 
 namespace SocomTrainingPlatform.Models.DashboardModels.DashboardViewModels
 {
     public class DashboardVm
     {
-        public List<FinalFilterModel> FinalFilterModel { get; set; }
-        public List<FilterModels> FilterModel { get; set; }
+        public List<SearchModel> SearchModel { get; set; }
         public Location Location { get; set; }
-        public TargetValues Target { get; set; }
-        public InsertValues InsertPoint { get; set; }
-        //public TrainingAreaTypetrainingType { get; set; }
-        public SupportValues Support { get; set; }
-        public BerthingValues BerthingWork { get; set; }
-        public MeetingValues Meeting { get; set; }
         public LocationNote note { get; set; }
         //public UsageDate indexDates { get; set; }
         //public List<UsageDate> dates { get; set; }
@@ -43,6 +37,7 @@ namespace SocomTrainingPlatform.Models.DashboardModels.DashboardViewModels
         public string FieldDescription { get; set; }
         public string FieldGrid { get; set; }
         public string FieldChoice { get; set; }
+        public string TypeChoice { get; set; }
         public string TarChoice { get; set; }
         public string SupChoice { get; set; }
         public string InsChoice { get; set; }

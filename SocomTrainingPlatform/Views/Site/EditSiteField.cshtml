@@ -1,0 +1,162 @@
+﻿@model SocomTrainingPlatform.Models.SiteField
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit Site Field</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="EditSiteField">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="LocationId" />
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label>Choose field type</label>
+                <div>
+                    <select class="form-control" asp-for="Field" id="choice" style="width: 100%;">
+                        <option selected="selected" id="choose">Choose...</option>
+                        <option value="Target">Target</option>
+                        <option value="Support">Support</option>
+                        <option value="InsertPoint">Insert Points</option>
+                        <option value="Berthing">Berthing/Work</option>
+                        <option value="Meeting">Meeting</option>
+                    </select>
+                </div>
+                <hr />
+                <div id="allChoices">
+                    <div class="form-group" id="Target" style="display: none;">
+                        <select id="aa" class="form-control" asp-for="Type" style="width: 100%;">
+                            <option selected="selected">Choose...</option>
+                            <option value="DA/Raid">DA/Raid</option>
+                            <option value="R&S">R&S</option>
+                            <option value="VehicleIntrediction">Vehicle Intrediction</option>
+                            <option value="Ambush">Ambush</option>
+                            <option value="RAA">RAA</option>
+                            <option value="VirtualSynthetic">Virtual/Synthetic</option>
+                            <option value="Gaf">GAF</option>
+                            <option value="Haf">HAF</option>
+                            <option value="Baf">Baf</option>
+                        </select>
+                    </div>
+                    <div class="form-group" id="Support" style="display: none;">
+                        <select id="bb" class="form-control" asp-for="Type" style="width: 100%;">
+                            <option selected="selected">Choose...</option>
+                            <option value="MotorPool">Motor Pool</option>
+                            <option value="FuelFarm">Fuel Farm</option>
+                            <option value="Contractor">Contractor</option>
+                            <option value="MedicalFacility">Medical Facility</option>
+                        </select>
+                    </div>
+                    <div class="form-group" id="InsertPoint" style="display: none;">
+                        <select id="cc" class="form-control" asp-for="Type" style="width: 100%;">
+                            <option selected="selected">Choose...</option>
+                            <option value="Airfield/Runway">Airfield/Runway</option>
+                            <option value="DZ">DZ</option>
+                            <option value="HLZ">HLZ</option>
+                            <option value="SplashPoint">SplashPoint</option>
+                            <option value="VDO/Lagger">VDO/Lagger</option>
+                        </select>
+                    </div>
+                    <div class="form-group" id="Berthing" style="display: none;">
+                        <select id="dd" class="form-control" asp-for="Type" style="width: 100%;">
+                            <option selected="selected">Choose...</option>
+                            <option value="ECG">ECG</option>
+                            <option value="SOTF/HHQ">SOTF/HHQ</option>
+                            <option value="Company">Company</option>
+                            <option value="TeamSite">Team Site</option>
+                        </select>
+                    </div>
+                    <div class="form-group" id="Meeting" style="display: none;">
+                        <select id="ee" class="form-control" asp-for="Type" style="width: 100%;">
+                            <option selected="selected">Choose...</option>
+                            <option value="SA">SA</option>
+                            <option value="KLE">KLE</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="Grid" class="control-label"></label>
+                <input asp-for="Grid" class="form-control" />
+                <span asp-validation-for="Grid" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <input asp-for="Description" class="form-control" />
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+<div>
+    <a asp-action="Details" asp-route-id="@Model.LocationId">Back to Site</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        $("#choice").change(function () {
+            $("#aa,#bb,#cc,#dd,#ee").val([]);
+            $("#Target,#Support,#InsertPoint,#Berthing,#Meeting").hide();
+
+            if ($(this).val() == "Target") {
+                $("#Target").show();
+            }
+            else if ($(this).val() == "Support") {
+                $("#Support").show();
+            }
+            else if ($(this).val() == "InsertPoint") {
+                $("#InsertPoint").show();
+            }
+            else if ($(this).val() == "Berthing") {
+                $("#Berthing").show();
+            }
+            else if ($(this).val() == "Meeting") {
+                $("#Meeting").show();
+            }
+        });
+
+    </script>
+<script>
+    $(document).ready(function () {
+        var field = @Model.Field;
+        var type = @Model.Type;
+
+        if ($(field).val() == "Target") {
+            $("#Target").show();
+            $("#aa").val(type);
+        }
+        else if ($(field).val() == "Support") {
+            $("#Support").show();
+            $("#bb").val(type);
+        }
+        else if ($(field).val() == "InsertPoint") {
+            $("#InsertPoint").show();
+            $("#cc").val(type);
+        }
+        else if ($(field).val() == "Berthing") {
+            $("#Berthing").show();
+            $("#dd").val(type);
+        }
+        else if ($(field).val() == "Meeting") {
+            $("#Meeting").show();
+            $("#dd").val(type);
+        }
+
+    });
+</script>
+}

@@ -1,9 +1,14 @@
 ﻿@model SocomTrainingPlatform.Models.ExcerciseModels.ExcerciseDetailsVm
-@{
-    ViewData["Title"] = "Excercise Details Details";
-    Layout = "~/Views/Shared/AdminLayout/_Layout.cshtml";
-}
+@{ ViewData["Title"] = "Excercise Details Details";
+    Layout = "~/Views/Shared/AdminLayout/_Layout.cshtml"; }
 
+<div class="row" id="alert" display="none">
+    <div class="col-md-12">
+        <div class="form-group">
+            @Html.Raw(@ViewBag.Alert)
+        </div>
+    </div>
+</div>
 <div class="container-fluid py-4" style="background-color:white; box-shadow: 0 4px 2px -2px gray">
     <div class="row">
         <div class="col-md-4">
@@ -11,14 +16,222 @@
             <h5 class="align-content-center">@Html.DisplayFor(model => model.ExcerciseType)</h5>
         </div>
         <div style="padding-right: 10px">
-            <h5>@Model.Excercise.StartDate.ToString(string.Format("dd/MM/yyyy")) - @Model.Excercise.EndDate.ToString(string.Format("dd/MM/yyyy"))</h5>
+            <h5>@Model.Excercise.StartDate.ToString(string.Format("MM/dd/yyyy")) - @Model.Excercise.EndDate.ToString(string.Format("MM/dd/yyyy"))</h5>
         </div>
     </div>
 </div>
+<div class="container-fluid py-4">
+    <div class="card">
+        <div class="card-header p-2">
+            <ul class="nav nav-pills">
+                <li class="nav-item"><a class="nav-link active" href="#timeline" data-toggle="tab">Event Plan</a></li>
+                <li class="nav-item"><a class="nav-link" href="#activity" data-toggle="tab">Calendar</a></li>
+                <li class="nav-item"><a class="nav-link" href="#newTab" data-toggle="tab">Checklist</a></li>
+            </ul>
+        </div>
+        <div class="card-body">
+            <div class="tab-content">
+                <div class="tab-pane active" id="timeline">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="page-header">
+                                    <h3>Event Timeline</h3>
+                                </div>
+                                <div style="display:inline-block;width:100%;overflow-y:auto;">
+                                    <ul class="timeline timeline-horizontal">
+                                        @if (Model.EventList != null)
+                                        {
+                            @foreach (var item in Model.EventList)
+                            {
+                @if (item.ShowOnTimeline == true)
+                {
+                <li class="timeline-item">
+                    <div class="timeline-badge primary"><i class="glyphicon glyphicon-check"></i></div>
+                    <div class="timeline-panel">
+                        <div class="timeline-heading">
+                            <div class="row">
+                                <h5 class="timeline-title"><a asp-controller="ExerciseEvent" asp-action="Index" asp-route-id="@item.Id">@item.EventName</a></h5>
+                                @if (item.StartTime > DateTime.Now)
+                                {
+                <h6 class="mb-0"><span class="badge bg-blue">Upcoming</span></h6> }
+            else if (item.EndTime < DateTime.Now)
+            {
+                <h6 class="mb-0"><span class="badge bg-grey">Completed</span></h6> }
+            else
+            {
+                <h6 class="mb-0"><span class="badge bg-green">Active</span></h6>}
+                            </div>
+                            <p><small><i class="glyphicon glyphicon-time"></i>@item.StartTime - @item.EndTime</small></p>
+                        </div>
+                        <div class="timeline-body">
+                            <p>@item.EventDescription</p>
+                        </div>
+                    </div>
+                </li>
+}}}
 
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="container-fluid col">
+                            <div class="card border-0" style="height:max-content; border: none">
+                                <div class="card-header border-0">
+                                    <h3 class="card-title">Events</h3>
+                                    <div class="card-tools">
+                                        @*<a asp-controller="Excercise" asp-action="EventStep1"asp-route-id="@Model.Excercise.Id" class="btn btn-tool btn-sm">
+                                <i class="fas fa-plus"></i>
+                            </a>*@
+                                        <a href="#" class="btn btn-tool btn-sm" data-toggle="modal" data-target="#modal-events">
+                                            <i class="fas fa-plus"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="card-body border-0" style="height: 350px; overflow-y: auto; border: none">
+                                    <div class="card-body" data-mdb-perfect-scrollbar="true" style="position: relative; height: 400px">
+
+                                        <table class="table mb-0">
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col">Event Name</th>
+                                                    <th scope="col">Start Date/Time</th>
+                                                    <th scope="col">End Date/Time</th>
+                                                    <th scope="col">Status</th>
+                                                    <th scope="col">Actions</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @if (Model.EventList != null)
+                                                {
+                                                    { int eventCount = 1; }
+                                    @foreach (var item in Model.EventList)
+                                    {
+                    <tr class="fw-normal">
+                        <td>
+                            <small><strong>@item.EventName</strong></small>
+                        </td>
+                        <th>
+                            <small>@item.StartTime</small>
+                        </th>
+                        <th>
+                            <small>@item.EndTime</small>
+                        </th>
+                        <th>
+                            @if (item.StartTime > DateTime.Now)
+                            {
+                <h6 class="mb-0"><span class="badge bg-lightblue">Upcoming</span></h6> }
+            else if (item.EndTime < DateTime.Now)
+            {
+                <h6 class="mb-0"><span class="badge bg-grey">Completed</span></h6> }
+            else
+            {
+                <h6 class="mb-0"><span class="badge bg-green">Active</span></h6>}
+                        </th>
+                        <th>
+                            <a href="#" data-toggle="modal" data-target="#modal-ExerciseEventEdit" data-name="@item.EventName" data-start="@item.StartTime" data-end="@item.EndTime" data-desc="@item.EventDescription" data-bool="@item.ShowOnCalendar" data-id="@item.Id">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <a data-btn="DeleteExerciseEvent" asp-action="DeleteExerciseEvent" asp-route-id="@item.Id">
+                                <i class="fas fa-trash-alt text-danger"></i>
+                            </a>
+                        </th>
+                    </tr>
+}}
+
+                                            </tbody>
+                                        </table>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane" id="activity">
+                    <div class="col">
+                        <div class="row">
+                            <div class="container-fluid col">
+                                <div class="card">
+                                    <div id="calendar"></div>
+                                    @*<div id="dp"></div>*@
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="container-fluid col">
+                                <div class="card border-0" style="height:max-content; border: none">
+                                    <div class="card-header border-0">
+                                        <h3 class="card-title">Calendar Events</h3>
+                                        <div class="card-tools">
+                                            <a href="#" class="btn btn-tool btn-sm" data-toggle="modal" data-target="#modal-ExerciseEvent">
+                                                <i class="fas fa-plus"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="card-body border-0" style="height: 350px; overflow-y: auto; border: none">
+                                        <div class="card-body" data-mdb-perfect-scrollbar="true" style="position: relative; height: 400px">
+
+                                            <table class="table mb-0">
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col">Event Name</th>
+                                                        <th scope="col">Start Date/Time</th>
+                                                        <th scope="col">End Date/Time</th>
+                                                        <th scope="col">Actions</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @if (Model.EventList != null)
+                                                    {
+                                                        { int eventCount = 1; }
+                                                        @foreach (var item in Model.EventList)
+                                                        {
+                                                            <tr class="fw-normal">
+                                                                <td>
+                                                                    <small><strong>@item.EventName</strong></small>
+                                                                </td>
+                                                                <th>
+                                                                    <small>@item.StartTime</small>
+                                                                </th>
+                                                                <th>
+                                                                    <small>@item.EndTime</small>
+                                                                </th>
+                                                                <th>
+                                                                    <a href="#" data-toggle="modal" data-target="#modal-ExerciseEventEdit" data-name="@item.EventName" data-start="@item.StartTime" data-end="@item.EndTime" data-desc="@item.EventDescription" data-bool="@item.ShowOnCalendar" data-id="@item.Id">
+                                                                        <i class="fas fa-edit"></i>
+                                                                    </a>
+                                                                    <a data-btn="DeleteExerciseEvent" asp-action="DeleteExerciseEvent" asp-route-id="@item.Id">
+                                                                        <i class="fas fa-trash-alt text-danger"></i>
+                                                                    </a>
+                                                                </th>
+                                                            </tr>
+                                                        }}
+
+                                                </tbody>
+                                            </table>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div> 
+                </div>
+                <div class="tab-pane" id="newTab">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <div class="container-fluid py-4">
     <div class="row">
         <div class="container-fluid col-md-8">
+            @*<div id="calendar"></div>*@
+            @*<div id="dp"></div>*@
             <div class="card">
                 <div class="card-header border-0">
                     <h3 class="card-title">Support Documents</h3>
@@ -40,32 +253,24 @@
                             </tr>
                         </thead>
                         <tbody>
-                                @if (Model.Docs != null)
-                                {
-                                    @foreach (var item in Model.Docs)
-                                    {
-                                        <tr>
-                                        <td>
-                                            @item.FileName
-                                        </td>
-                                        <td>
-                                            @item.UploadDate.ToString(string.Format("MM/dd/yyyy"))
-                                        </td>
-                                        <td>
-                                            <button type="button" supid="supid" class="btn btn-dark" data-id="@item.Id">Open Document</button>
-                                        </td>
-                                        @*<td>
-                                            <form asp-page-handler="Download" method="post" asp-route-id="@item.Id, @Model.Excercise.Id">
-                                                <input type="submit" class="btn btn-dark" value="Download">
-                                            </form>
-                                        </td>*@
-                                        <td>
-                                            @*<form asp-page-handler="Delete" method="post" asp-route-id="@item.Id">*@
-                                                <input type="submit" class="btn btn-danger" value="Delete">
-                                        </td>
-                                        </tr>
-                                    }
-                                }
+                            @if (Model.Docs != null)
+                            {
+                @foreach (var item in Model.Docs)
+                {
+<tr>
+    <td>
+        @item.FileName
+    </td>
+    <td>
+        @item.UploadDate.ToString(string.Format("MM/dd/yyyy"))
+    </td>
+    <td>
+        <button type="button" supid="supid" class="btn btn-dark" data-id="@item.Id">Open Document</button>
+    </td>
+    <td>
+        <a delete-doc="docBtn" asp-action="DeleteSupportDoc" asp-route-id="@item.Id" type="button" class="btn btn-danger" value="Delete">Delete</a>
+    </td>
+</tr>}}
                         </tbody>
                     </table>
                 </div>
@@ -91,28 +296,24 @@
                             </tr>
                         </thead>
                         <tbody>
-                                @if (Model.Docs != null)
-                                {
-                                    @foreach (var item in Model.Briefs)
-                                    {
-                                     <tr>
-                                        <td>
-                                            @item.FileName
-                                        </td>
-                                        <td>
-                                            @item.UploadDate.ToString(string.Format("MM/dd/yyyy"))
-                                        </td>
-                                        <td>
-                                            <button type="button" breifid="breifid" class="btn btn-dark" data-id="@item.Id">Open Document</button>
-                                        </td>
-                                        <td>
-                                            <form asp-page-handler="Delete" method="post" asp-route-id="@item.Id">
-                                                <input type="submit" class="btn btn-danger" value="Delete">
-                                            </form>
-                                        </td>
-                                        </tr>
-                                    }                                   
-                                }
+                            @if (Model.Docs != null)
+                            {
+                @foreach (var item in Model.Briefs)
+                {
+<tr>
+    <td>
+        @item.FileName
+    </td>
+    <td>
+        @item.UploadDate.ToString(string.Format("MM/dd/yyyy"))
+    </td>
+    <td>
+        <button type="button" breifid="breifid" class="btn btn-dark" data-id="@item.Id">Open Document</button>
+    </td>
+    <td>
+        <a delete-brief="briefBtn" asp-action="DeleteBrief" asp-route-id="@item.Id" type="button" onclick=”return false;” class="btn btn-danger" value="Delete">Delete</a>
+    </td>
+</tr>}}
                         </tbody>
                     </table>
                 </div>
@@ -124,21 +325,19 @@
                         <a href="#" class="btn btn-tool btn-sm" data-toggle="modal" data-target="#modal-note">
                             <i class="fas fa-plus"></i>
                         </a>
-                     </div>
-                 </div>
+                    </div>
+                </div>
                 <!-- /.card-header -->
                 <div class="card-body">
                     <row>
                         @if (Model.Notes != null)
                         {
-                            @foreach (var item in Model.Notes)
-                            {
-                                <strong>@item.DateStamp.ToString(string.Format("MM/dd/yyyy"))</strong>
-                                <h6>@item.Subject.ToString()</h6>
-                                <p>@item.Body.ToString()</p>
-                                <hr>
-                            }
-                        }
+            @foreach (var item in Model.Notes)
+            {
+<strong>@item.DateStamp.ToString(string.Format("MM/dd/yyyy"))</strong>
+                    <h6>@item.Subject.ToString()</h6>
+                                        <p>@item.Body.ToString()</p>
+                                                            <hr>}}
                     </row>
                 </div>
             </div>
@@ -146,28 +345,45 @@
         <div class="col-md-4">
             <div class="card">
                 <div class="card-header border-0">
-                    <h3 class="card-title">Locations</h3>
+                    <h3 class="card-title">MOU's'</h3>
                     <div class="card-tools">
-                        <a href="#" class="btn btn-tool btn-sm" data-toggle="modal" data-target="#modal-location">
+                        <a href="#" class="btn btn-tool btn-sm" data-toggle="modal" data-target="#modal-mou">
                             <i class="fas fa-plus"></i>
                         </a>
-                     </div>
-                 </div>
+                    </div>
+                </div>
                 <!-- /.card-header -->
-                <div class="card-body" style="height: 300px;">
-                    <row>
-                        @if (Model.Locations != null)
-                        {
-                            @foreach (var item in Model.Locations)
+                <div class="card-body" data-mdb-perfect-scrollbar="true" style="height: 300px;">
+                    <table class="table mb-0">
+                        <thead>
+                            <tr>
+                                <th>MOU Name</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.Mous != null)
                             {
-                                <strong><a asp-controller="Site" asp-action="Details" asp-route-id="@item.Id">@item.Name</a></strong>
-                                @*<a  asp-action="UpdateLocation" asp-route-id="@item.Id">
-                                  <i class="fa fa-plus"></i>
-                                 </a>*@
-                                <hr>
+                                @foreach (var item in Model.Mous)
+                                {
+                                    <tr class="fw-normal">
+                                        <td class="align-middle">
+                                            <a asp-controller="Mou" asp-action="Details" asp-route-id="@item.Id">@item.Title</a>
+                                        </td>
+                                        <td class="align-middle">
+                                            @if (item.EndDate <= DateTime.Now)
+                                            {
+                        <h6 class="mb-0"><span class="badge bg-warning">Expired</span></h6> }
+                                            else
+                                            {
+                                                <h6 class="mb-0"><span class="badge bg-success">Active</span></h6>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
                             }
-                        }
-                    </row>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -177,21 +393,21 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Add New SUpport Document</h4>
+                <h4 class="modal-title">Add New Support Document</h4>
                 <button class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form enctype="multipart/form-data" method="post" asp-action="UploadSupDoc" asp-route-id="@Model.Excercise.Id">
+            <form id="UploadSupportDoc" enctype="multipart/form-data" method="post" asp-action="UploadSupDoc" asp-route-id="@Model.Excercise.Id">
                 <div class="modal-body">
-                        <div class="form-group">
-                            <label>File Name</label>
-                            <input asp-for="@Model.FileName" />
-                        </div>
-                        <div class="form-group">
-                            <label>Choose File</label>
-                            <input asp-for="@Model.file" class="form-control" accept=".pdf" type="file" />
-                        </div>
+                    <div class="form-group">
+                        <label class="control-label">File Name</label>
+                        <input asp-for="@Model.FileName" />
+                    </div>
+                    <div class="form-group">
+                        <label>Choose File</label>
+                        <input asp-for="@Model.file" class="form-control" accept=".pdf" type="file" />
+                    </div>
                 </div>
                 <div class="modal-footer justify-content-between">
                     <input type="submit" value="Submit" />
@@ -206,23 +422,23 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Add New Brief File</h4>
+                <h4 class="modal-title">Add New Brief</h4>
                 <button class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form enctype="multipart/form-data" method="post" asp-action="UploadBrief" asp-route-id="@Model.Excercise.Id">
+            <form id="UploadBrief" enctype="multipart/form-data" method="post" asp-action="UploadBrief" asp-route-id="@Model.Excercise.Id">
                 <div class="modal-body">
                     <div class="modal-body">
                         <div class="form-group">
-                            <label>File Name</label>
+                            <label class="control-label">File Name</label>
                             <input asp-for="@Model.FileName" />
                         </div>
                         <div class="form-group">
                             <label>Choose File</label>
                             <input asp-for="@Model.file" class="form-control" accept=".pdf" type="file" />
                         </div>
-                </div>
+                    </div>
                 </div>
                 <div class="modal-footer justify-content-between">
                     <input type="submit" value="Submit" />
@@ -233,32 +449,199 @@
     </div>
     <!-- /.modal-dialog -->
 </div>
-<div class="modal fade" id="modal-location">
+<div class="modal fade" id="modal-ExerciseEvent">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Add Location</h4>
+                <h4 class="modal-title">Add New Event</h4>
                 <button class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form method="post" asp-action="AddLocation" asp-route-id="@Model.Excercise.Id">
+            <form id="AddExerciseEvent" method="post" asp-action="AddExerciseEvent" asp-route-id="@Model.Excercise.Id">
                 <div class="modal-body">
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <label>Choose Location</label>
-                            <select asp-for="LocationChoice" class="form-control"  asp-items="ViewBag.SelectLocations"></select>
+                    <div class="col-md-10">
+                        <div class="form-group" style="padding-top: 15px;">
+                            <label class="control-label">Event Name</label>
+                            <input asp-for="EventName" class="form-control" />
                         </div>
-                </div>
+                        <div class="form-group">
+                            <label class="control-label">Start Date & Time</label>
+                            <input asp-for="EventStartTime" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">End Date & Time</label>
+                            <input asp-for="EventEndTime" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Event Description</label>
+                            <textarea class="form-control" asp-for="EventDescription">
+                            </textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Show On Calendar</label>
+                            <input type="checkbox" asp-for="ShowEvent" class="form-control" />
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-footer justify-content-between">
-                    <input type="submit" value="Submit" />
+                    <input type="submit" value="Create Event" />
                 </div>
             </form>
         </div>
-        <!-- /.modal-content -->
     </div>
-    <!-- /.modal-dialog -->
+</div>
+<div class="modal fade" id="modal-ExerciseEventEdit">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Update Event</h4>
+                <button class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="UpdateExerciseEvent" method="post" asp-action="UpdateExerciseEvent" asp-route-id="@Model.Excercise.Id">
+                <div class="modal-body">
+                    <input type="hidden" asp-for="ExerciseEventId" id="ExEventId" />
+                    <div class="col-md-10">
+                        <div class="form-group" style="padding-top: 15px;">
+                            <label class="control-label">Event Name</label>
+                            <input asp-for="EventName" class="form-control" id="ExEventName" />
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Start Date & Time</label>
+                            <input asp-for="EventStartTime" class="form-control" id="ExEventStart" />
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">End Date & Time</label>
+                            <input asp-for="EventEndTime" class="form-control" id="ExEventEnd" />
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Event Description</label>
+                            <textarea class="form-control" asp-for="EventDescription" id="ExEventDesc">
+                            </textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Show On Calendar</label>
+                            <input type="checkbox" asp-for="ShowEvent" class="form-control" id="ExEventBool" />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <input type="submit" value="Update Event" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modal-location">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Add Location Event</h4>
+                <button class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="AddLocationEvent" method="post" asp-action="AddLocationEvent" asp-route-id="@Model.Excercise.Id">
+                <div class="modal-body">
+                    <div class="col-md-10">
+                        <div class="form-group">
+                            <label class="control-label">Event Name</label>
+                            <input asp-for="LocationEventName" class="form-control" />
+                        </div>
+                        <div class="form-group" style="padding-top: 15px;">
+                            <label class="control-label">Search Location</label>
+                            <div class="input-group input-group-lg">
+                                <input type="text" asp-for="locationName" id="productName" class="form-control form-control-lg" placeholder="Enter Location Name..." />
+                                <div class="input-group-append">
+                                    <button type="submit" class="btn btn-lg btn-default">
+                                        <i class="fa fa-search"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Location Field</label>
+                            <select id="citySearch" asp-for="FieldResult" class="form-control" disabled>
+                                <option value="">Field Choice</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Event Description</label>
+                            <textarea class="form-control" asp-for="FieldDescription">
+                            </textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Start Date</label>
+                            <input type="date" asp-for="EventStartDate" class="form-control" id="EventStartDate" min="@Model.ExStartDate" max="@Model.ExEndDate" />
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">End Date</label>
+                            <input type="date" asp-for="EventEndDate" class="form-control" id="EventEndDate" min="@Model.ExStartDate" max="@Model.ExEndDate" />
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Show On Calendar</label>
+                            <input type="checkbox" asp-for="ShowOnCalendar" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Show On Timeline</label>
+                            <input type="checkbox" asp-for="ShowOnTimeline" class="form-control" />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <input type="submit" value="Create Event" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modal-events">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Add Exercise Event</h4>
+                <button class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="AddLocationEvent" method="post" asp-action="AddExerciseEvent" asp-route-id="@Model.Excercise.Id">
+                <div class="modal-body">
+                    <div class="col-md-10">
+                        <div class="form-group">
+                            <label class="control-label">Event Name</label>
+                            <input asp-for="EventName" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Event Description</label>
+                            <textarea class="form-control" asp-for="EventDescription">
+                            </textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Start Date</label>
+                            <input asp-for="EventStartDate" class="form-control" id="EventStartDate" />
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">End Date</label>
+                            <input asp-for="EventEndDate" class="form-control" id="EventEndDate" />
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Show On Calendar</label>
+                            <input type="checkbox" asp-for="ShowOnCalendar" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Show On Timeline</label>
+                            <input type="checkbox" asp-for="ShowOnTimeline" class="form-control" />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <input type="submit" value="Create Event" />
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 <div class="modal fade" id="modal-note">
     <div class="modal-dialog">
@@ -269,10 +652,10 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form method="post" asp-action="CreateNote" asp-route-id="@Model.Excercise.Id">
+            <form id="CreateNote" method="post" asp-action="CreateNote" asp-route-id="@Model.Excercise.Id">
                 <div class="modal-body">
                     <div class="form-group">
-                        <label>Subject</label>
+                        <label class="control-label">Subject</label>
                         <input asp-for="NoteSubject" />
                         <span asp-validation-for="NoteSubject" class="text-danger"></span>
                     </div>
@@ -290,21 +673,114 @@
     </div>
     <!-- /.modal-dialog -->
 </div>
+<div class="modal fade" id="modal-mou">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Add New MOU</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="AddMou" method="post" asp-action="AddMou" asp-route-id="@Model.Excercise.Id">
+                @Html.HiddenFor(p => p.MouChoice, new { id = "Id" })
+                <div class="modal-body">
+                    <div class="col">
+                        <div class="row">
+                            <div class="col">
+                                <button asp-for="MouChoice" value="1" style="padding-right: 10px" type="button" id="NewMou" class="btn btn-default">New MOU</button>
+                            </div>
+                            <div class="col">
+                                <button asp-for="MouChoice" value="2" style="padding-left: 10px" type="button" id="ExsistingMou" class="btn btn-default">Exsisting MOU</button>
+                            </div>
+                        </div>
+                        <div class="form-goup" style="display: none" id="exsmou">
+                            <label>Exsisting MOU</label>
+                            <select asp-for="MouId" class="form-control" id="PocId" asp-items="ViewBag.SelectMous"></select>
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        </div>
+                        <div style="display: none" id="newmou">
+                            <div class="form-group">
+                                <label>Mou Name</label>
+                                <input asp-for="Title" class="form-control" />
+                                <span asp-validation-for="Title" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label>Choose File</label>
+                                <input asp-for="MouFile" class="form-control" accept=".pdf" type="file" />
+                            </div>
+                            <div class="form-group">
+                                <label>Start Date</label>
+                                <input asp-for="StartDate.Date" asp-format="{0:yyyy-MM-dd}" class="form-control" />
+                                <span asp-validation-for="StartDate" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label>End Date</label>
+                                <input asp-for="EndDate" asp-format="{0:yyyy-MM-dd}" class="form-control" />
+                                <span asp-validation-for="EndDate" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label>Contact First Name</label>
+                                <input asp-for="FirstName" class="form-control" />
+                                <span asp-validation-for="FirstName" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label>Contact Last Name</label>
+                                <input asp-for="lastName" class="form-control" />
+                                <span asp-validation-for="lastName" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label>Contact Email</label>
+                                <input asp-for="Email" class="form-control" />
+                                <span asp-validation-for="Email" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label>Contact Phone Number</label>
+                                <input asp-for="PhoneNumber" class="form-control" />
+                                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <input type="submit" value="Create" class="btn btn-primary" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <input type="submit" value="Submit" />
+                </div>
+            </form>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-
-
-<script src='https://api.mapbox.com/mapbox-gl-js/v2.2.0/mapbox-gl.js'></script>
-<script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.7.0/mapbox-gl-geocoder.min.js"></script>
-<script src="~/plugins/jquery-ui/jquery-ui.min.js"></script>
-<script src="~/plugins/moment/moment.min.js"></script>
-<script src="~/plugins/fullcalendar/main.js"></script>
-
-<script>
+    <link rel="stylesheet" href="~/css/horizontalTimeline.css">
+    <link rel="stylesheet" href="~/css/ExerciseTimeline.css">
+    <script src='https://api.mapbox.com/mapbox-gl-js/v2.2.0/mapbox-gl.js'></script>
+    <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.7.0/mapbox-gl-geocoder.min.js"></script>
+    <script src="~/plugins/jquery-ui/jquery-ui.min.js"></script>
+    <script src="~/plugins/moment/moment.min.js"></script>
+    <script src="~/plugins/moment/locales.js"></script>
+    <script src="~/plugins/fullcalendar/main.js"></script>
+    <script src="~/dist/js/daypilot-all.min.js" asp-append-version="true"></script>
+    @*<script>
+            $(document).ready(function () {
+                var model = @Html.Raw(Json.Serialize(Model.Excercise.Id));
+                var start = @Html.Raw(Json.Serialize(Model.ExStartDate));
+                const dp = new DayPilot.Month("dp", {
+                startDate: start,
+                endDate: "2022-10-10"
+                });
+                dp.init();
+                dp.events.load('/Excercise/GetCalendarEvents?id=' + model);
+            });
+        </script>*@
+    <script>
     mapboxgl.accessToken = 'pk.eyJ1IjoiY2Fyc29uYm91cmdlb2lzIiwiYSI6ImNrb2dpamRybzBuOHAycG85bTczZmVreTQifQ.htIKDF3etzcH0j0MN8VUJg';
-
-
 
             var map = new mapboxgl.Map({
                 container: 'map',
@@ -315,79 +791,208 @@
             });
             var marker = new mapboxgl.Marker()
                 .setLngLat([@ViewBag.Long, @ViewBag.Lat])
-                .addTo(map);</script>
-
-<script>
-
-    document.addEventListener('DOMContentLoaded', function() {
-      var calendarEl = document.getElementById('calendar');
-      var calendar = new FullCalendar.Calendar(calendarEl, {
-        initialView: 'dayGridMonth'
-      });
-      calendar.render();
-    });
-
-</script>
-<script>
-    $(function () {
-        //Initialize Select2 Elements
-        $('.select2').select2()
-        $('#reservation').daterangepicker();
-        $('form').submit(function (ev, picker) {
-        [startDate, endDate] = $('.date_range').val().split(' - ');
-        $(this).find('input[name="start_date"]').val(startDate);
-        $(this).find('input[name="end_date"]').val(endDate);
+                .addTo(map);
+    </script>
+    <script>
+        $(document).ready(function () {
+            setTimeout('$("#alert").hide()', 3000);
         });
-</script>
+    </script>
 
-<script>
-        $("#choice").change(function(){
-      $("#A,#B,#C,#D,#E").hide();
-      if($(this).val() == "A"){
-        $("#A").show();
-      }
-      else if($(this).val() == "B"){
-        $("#B").show();
-      }
-      else if($(this).val() == "C"){
-        $("#C").show();
-      }
-      else if($(this).val() == "D"){
-        $("#D").show();
-      }
-      else if($(this).val() == "E"){
-        $("#E").show();
-      }
-    });
+    <script>
+        var startD = @Html.Raw(Json.Serialize(Model.ExStartDate));
+        var endD = @Html.Raw(Json.Serialize(Model.ExEndDate));
+        var model = @Html.Raw(Json.Serialize(Model.Excercise.Id));
+        var events = @Html.Raw(Json.Serialize(Model.EventModel));
+                var calendarEl = document.getElementById('calendar');
+                var calendar = new FullCalendar.Calendar(calendarEl, {
+                    initialView: 'dayGridMonth',
+                    height: 500,
+                    headerToolbar: {
+                        left: 'prev,next today',
+                        center: 'title',
+                        right: 'dayGridMonth,timeGridWeek,timeGridDay'
+                    },
+                    validRange: {
+                        start: startD,
+                        end: endD,
+                    },
+                    events: events,
+                    eventRender: function (event, element) {
+                        element.qtip(
+                            {
+                                content: event.description
+                            });
+                    },
 
-</script>
-<script>
-    var choice = 0;
-     $('#NewPoc').click(function() {
-         $('#exspoc').hide();
-         $('#newpoc').show();
-         $('#Id').val(1);
-     });
-     $('#ExsistingPoc').click(function() {
-         $('#newpoc').hide();
-         $('#exspoc').show();
-         $("#Id").val(2);
-     });
+                    editable: false
+                });
+                calendar.render();
 
-</script>
-<script>
+    </script>
+    <script>
+        $(function () {
+            //Initialize Select2 Elements
+            $('.select2').select2()
+            $('#reservation').daterangepicker();
+            $('form').submit(function (ev, picker) {
+                [startDate, endDate] = $('.date_range').val().split(' - ');
+                $(this).find('input[name="start_date"]').val(startDate);
+                $(this).find('input[name="end_date"]').val(endDate);
+            });
+    </script>
+
+    <script>
+        $("#choice").change(function () {
+            $("#A,#B,#C,#D,#E").hide();
+            if ($(this).val() == "A") {
+                $("#A").show();
+            }
+            else if ($(this).val() == "B") {
+                $("#B").show();
+            }
+            else if ($(this).val() == "C") {
+                $("#C").show();
+            }
+            else if ($(this).val() == "D") {
+                $("#D").show();
+            }
+            else if ($(this).val() == "E") {
+                $("#E").show();
+            }
+        });
+
+    </script>
+    <script>
+        var choice = 0;
+        $('#NewMou').click(function () {
+            $('#exsmou').hide();
+            $('#newmou').show();
+            $('#Id').val(1);
+        });
+        $('#ExsistingMou').click(function () {
+            $('#newmou').hide();
+            $('#exsmou').show();
+            $("#Id").val(2);
+        });
+
+    </script>
+    <script>
         $("button").click(function () {
-         if($(this).attr('supid') == "supid")
-         {
-           var id = $(this).attr('data-id');
-           window.open("/Excercise/ShowSupportFile/" + id, "_blank");
-         }
-         else if($(this).attr('breifid') == "breifid")
-         {
-             var id = $(this).attr('data-id');
-           window.open("/Excercise/ShowBreifFile/" + id, "_blank");
-         }
+            if ($(this).attr('supid') == "supid") {
+                var id = $(this).attr('data-id');
+                window.open("/Excercise/ShowSupportFile/" + id, "_blank");
+            }
+            else if ($(this).attr('breifid') == "breifid") {
+                var id = $(this).attr('data-id');
+                window.open("/Excercise/ShowBreifFile/" + id, "_blank");
+            }
 
-    });
-</script>
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            $('#productName').autocomplete({
+                source: '/Site/Suggest',
+                appendTo: $('#modal-location'),
+                select: function (event, ui) {
+                    $("select#citySearch").empty();
+                    $.getJSON(`/Excercise/GetSiteFields?cid=${ui.item.label}`, function (data) {
+                        console.log(data);
+                        $.each(data, function (i, item) {
+                            $("select#citySearch").append(`<option value="${item.id}">${item.name}</option>`);
+                        });
+                    });
+                    $("select#citySearch").attr("disabled", false);
+                },
+            });
+        });
+    </script>
+    <script>
+        $("a").click(function () {
+            var name = $(this).attr('data-name');
+            var id = $(this).attr('data-id');
+            var start = $(this).attr('data-start');
+            var end = $(this).attr('data-end');
+            var desc = $(this).attr('data-desc');
+            $('#ExEventId').val(id);
+            $("#ExEventName").val(name);
+            $("#ExEventStart").val(start);
+            $("#ExEventEnd").val(end);
+            $("#ExEventDesc").val(desc);
+        });
+    </script>
+    <script>
+        $('#AddLocationEvent').submit(function () {
+            if ($(this).find('.input-validation-error').length == 0) {
+                $(this).find(':submit').attr('disabled', 'disabled');
+            }
+        });
+        $('#AddExerciseEvent').submit(function () {
+            if ($(this).find('.input-validation-error').length == 0) {
+                $(this).find(':submit').attr('disabled', 'disabled');
+            }
+        });
+        $('#AddMou').click(function () {
+            if ($(this).find('.input-validation-error').length == 0) {
+                $(this).find(':submit').attr('disabled', 'disabled');
+            }
+        });
+        $('#UploadSupportDoc').click(function () {
+            if ($(this).find('.input-validation-error').length == 0) {
+                $(this).find(':submit').attr('disabled', 'disabled');
+            }
+        });
+        $('#UploadBrief').click(function () {
+            if ($(this).find('.input-validation-error').length == 0) {
+                $(this).find(':submit').attr('disabled', 'disabled');
+            }
+        });
+        $('#CreateNote').submit(function () {
+            if ($(this).find('.input-validation-error').length == 0) {
+                $(this).find(':submit').attr('disabled', 'disabled');
+            }
+        });
+        $('#UpdateExerciseEvent').submit(function () {
+            if ($(this).find('.input-validation-error').length == 0) {
+                $(this).find(':submit').attr('disabled', 'disabled');
+            }
+        });
+    </script>
+
+    <script>
+        $('#DeleteExerciseEvent').click(function () {
+            $(this).prop("disabled", true);
+        });
+    </script>
+    <!--Prevents Double Clicking <a> Anchor Tags-->
+    <script>
+        $("a").click(function (event) {
+            if ($(this).attr('delete-doc') == 'docBtn') {
+                if ($(this).hasClass("disabled")) {
+                    event.preventDefault();
+                }
+                $(this).addClass("disabled");
+            }
+        });
+        $("a").click(function (event) {
+            if ($(this).attr('delete-brief') == 'briefBtn') {
+                if ($(this).hasClass("disabled")) {
+                    event.preventDefault();
+                }
+                $(this).addClass("disabled");
+            }
+        });
+        $("a").click(function (event) {
+            if ($(this).attr('data-btn') == 'DeleteExerciseEvent') {
+                if ($(this).hasClass("disabled")) {
+                    event.preventDefault();
+                }
+                $(this).addClass("disabled");
+            }
+        });
+    </script>
+
+
 }
+

@@ -25,34 +25,33 @@ namespace SocomTrainingPlatform.Models
         public virtual DbSet<AspNetUserLogin> AspNetUserLogins { get; set; }
         public virtual DbSet<AspNetUserRole> AspNetUserRoles { get; set; }
         public virtual DbSet<AspNetUserToken> AspNetUserTokens { get; set; }
-        public virtual DbSet<BerthingImage> BerthingImages { get; set; }
-        public virtual DbSet<BerthingWork> BerthingWorks { get; set; }
         public virtual DbSet<Excercise> Excercises { get; set; }
         public virtual DbSet<ExcerciseBrief> ExcerciseBriefs { get; set; }
         public virtual DbSet<ExcerciseLocation> ExcerciseLocations { get; set; }
         public virtual DbSet<ExcerciseNote> ExcerciseNotes { get; set; }
         public virtual DbSet<ExcerciseType> ExcerciseTypes { get; set; }
-        public virtual DbSet<InsertImage> InsertImages { get; set; }
-        public virtual DbSet<InsertPoint> InsertPoints { get; set; }
+        public virtual DbSet<FieldImage> FieldImages { get; set; }
         public virtual DbSet<Location> Locations { get; set; }
         public virtual DbSet<LocationFile> LocationFiles { get; set; }
         public virtual DbSet<LocationNote> LocationNotes { get; set; }
         public virtual DbSet<LocationUsageDate> LocationUsageDates { get; set; }
-        public virtual DbSet<Meeting> Meetings { get; set; }
-        public virtual DbSet<MeetingImage> MeetingImages { get; set; }
         public virtual DbSet<Mou> Mous { get; set; }
+        public virtual DbSet<MouExcercise> MouExcercises { get; set; }
         public virtual DbSet<Organization> Organizations { get; set; }
         public virtual DbSet<PocLocation> PocLocations { get; set; }
         public virtual DbSet<PocOrganization> PocOrganizations { get; set; }
         public virtual DbSet<PointOfContact> PointOfContacts { get; set; }
         public virtual DbSet<SubOrganization> SubOrganizations { get; set; }
-        public virtual DbSet<Support> Supports { get; set; }
         public virtual DbSet<SupportDocument> SupportDocuments { get; set; }
-        public virtual DbSet<SupportImage> SupportImages { get; set; }
-        public virtual DbSet<Target> Targets { get; set; }
-        public virtual DbSet<TargetImage> TargetImages { get; set; }
         public virtual DbSet<TrainingArea> TrainingAreas { get; set; }
         public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<SiteField> SiteFields { get; set; }
+        public virtual DbSet<LocationEvent> LocationEvents { get; set; }
+        public virtual DbSet<ExerciseEvent> ExerciseEvents { get; set; }
+        public virtual DbSet<EventLocation> EventLocations { get; set; }
+        public virtual DbSet<EventDocument> EventDocuments { get; set; }
+        public virtual DbSet<EventChecklist> EventChecklists { get; set; }
+        public virtual DbSet<ChecklistItem> ChecklistItems { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -162,40 +161,75 @@ namespace SocomTrainingPlatform.Models
                     .HasForeignKey(d => d.UserId);
             });
 
-            modelBuilder.Entity<BerthingImage>(entity =>
+            modelBuilder.Entity<EventLocation>(entity =>
             {
-                entity.ToTable("BerthingImage");
+                entity.ToTable("EventLocations");
 
-                entity.Property(e => e.Description).HasMaxLength(250);
+                entity.Property(e => e.FieldName).IsRequired().HasMaxLength(50);
 
-                entity.Property(e => e.ImageFile).IsRequired();
+                entity.Property(e => e.FieldType).IsRequired().HasMaxLength(50);
 
-                entity.HasOne(d => d.BerthingWork)
-                    .WithMany(p => p.BerthingImages)
-                    .HasForeignKey(d => d.BerthingWorkId)
+                entity.Property(e => e.LocationName).IsRequired();
+
+                entity.Property(e => e.EndDate).HasColumnType("datetime");
+
+                entity.Property(e => e.StartDate).HasColumnType("datetime");
+
+                entity.HasOne(d => d.ExerciseEvent)
+                    .WithMany(p => p.EventLocations)
+                    .HasForeignKey(d => d.EventId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_BerthingImage_BerthingWork");
+                    .HasConstraintName("FK_EventLocation_ExerciseEvent");
+                entity.HasOne(l => l.Location)
+                .WithMany(e => e.EventLocations)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_EventLocations_Location");
+
             });
 
-            modelBuilder.Entity<BerthingWork>(entity =>
+            modelBuilder.Entity<EventDocument>(entity =>
             {
-                entity.ToTable("BerthingWork");
+                entity.ToTable("EventDocuments");
 
-                entity.Property(e => e.Description).HasMaxLength(250);
+                entity.Property(e => e.Name).IsRequired().HasMaxLength(50);
 
-                entity.Property(e => e.Grid).HasMaxLength(50);
+                entity.Property(e => e.UploadDate).IsRequired();
 
-                entity.Property(e => e.Name)
-                    .IsRequired()
-                    .HasMaxLength(50);
+                entity.Property(e => e.Data).IsRequired();
 
-                entity.Property(e => e.Type).HasMaxLength(50);
-
-                entity.HasOne(d => d.Location)
-                    .WithMany(p => p.BerthingWorks)
-                    .HasForeignKey(d => d.LocationId)
+                entity.HasOne(d => d.ExerciseEvent)
+                    .WithMany(p => p.EventDocuments)
+                    .HasForeignKey(d => d.EventId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_BerthingWork_Location");
+                    .HasConstraintName("FK_EventDocuments_ExerciseEvent");
+            });
+
+            modelBuilder.Entity<EventChecklist>(entity =>
+            {
+                entity.ToTable("EventChecklist");
+
+                entity.Property(e => e.Name).IsRequired().HasMaxLength(50);
+
+                entity.HasOne(d => d.ExcerciseEvent)
+                    .WithMany(p => p.EventChecklists)
+                    .HasForeignKey(d => d.EventId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_EventChecklist_ExerciseEvent");
+            });
+
+            modelBuilder.Entity<ChecklistItem>(entity =>
+            {
+                entity.ToTable("ChecklistItem");
+
+                entity.Property(e => e.ItemName).IsRequired().HasMaxLength(50);
+
+                entity.Property(e => e.Completed).IsRequired();
+
+                entity.HasOne(d => d.EventChecklist)
+                    .WithMany(p => p.ChecklistItems)
+                    .HasForeignKey(d => d.ChecklistId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_EventChecklist_ChecklistItem");
             });
 
             modelBuilder.Entity<Excercise>(entity =>
@@ -302,40 +336,35 @@ namespace SocomTrainingPlatform.Models
                     .HasConstraintName("FK_ExcerciseType_Organization");
             });
 
-            modelBuilder.Entity<InsertImage>(entity =>
+            modelBuilder.Entity<ExerciseEvent>(entity =>
             {
-                entity.ToTable("InsertImage");
+                entity.ToTable("ExerciseEvent");
 
-                entity.Property(e => e.Description).HasMaxLength(250);
+                entity.Property(e => e.EventName).HasMaxLength(100).IsRequired();
+                entity.Property(e => e.StartTime).IsRequired();
+                entity.Property(e => e.EndTime).IsRequired();
+
+                entity.HasOne(d => d.Excercise)
+                   .WithMany(p => p.ExerciseEvents)
+                   .HasForeignKey(d => d.ExerciseId)
+                   .OnDelete(DeleteBehavior.ClientSetNull)
+                   .HasConstraintName("FK_ExerciseEvent_Excercise");
+
+            });
+
+            modelBuilder.Entity<FieldImage>(entity =>
+            {
+                entity.ToTable("FieldImage");
+
+                entity.Property(e => e.Description).HasMaxLength(20);
 
                 entity.Property(e => e.Image).IsRequired();
 
-                entity.HasOne(d => d.InsertPoint)
-                    .WithMany(p => p.InsertImages)
-                    .HasForeignKey(d => d.InsertPointId)
+                entity.HasOne(d => d.SiteField)
+                    .WithMany(p => p.FieldImages)
+                    .HasForeignKey(d => d.FieldId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_InsertImage_InsertPoint");
-            });
-
-            modelBuilder.Entity<InsertPoint>(entity =>
-            {
-                entity.ToTable("InsertPoint");
-
-                entity.Property(e => e.Description).HasMaxLength(250);
-
-                entity.Property(e => e.Grid).HasMaxLength(50);
-
-                entity.Property(e => e.Name)
-                    .IsRequired()
-                    .HasMaxLength(50);
-
-                entity.Property(e => e.Type).HasMaxLength(50);
-
-                entity.HasOne(d => d.Location)
-                    .WithMany(p => p.InsertPoints)
-                    .HasForeignKey(d => d.LocationId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_InsertPoint_Location");
+                    .HasConstraintName("FK_FieldImage_SiteField");
             });
 
             modelBuilder.Entity<Location>(entity =>
@@ -378,6 +407,22 @@ namespace SocomTrainingPlatform.Models
                     .WithMany(p => p.Locations)
                     .HasForeignKey(d => d.TrainingAreaId)
                     .HasConstraintName("FK_Location_TrainingArea");
+            });
+            modelBuilder.Entity<LocationEvent>(entity =>
+            {
+                entity.ToTable("LocationEvents");
+                entity.Property(e => e.LocationName).IsRequired().HasMaxLength(50);
+                entity.Property(e => e.EventName).IsRequired().HasMaxLength(100);
+                entity.Property(e => e.FieldName).IsRequired().HasMaxLength(50);
+                entity.Property(e => e.FieldType).IsRequired().HasMaxLength(50);
+                entity.Property(e => e.StartDate).IsRequired();
+                entity.Property(e => e.EndDate).IsRequired();
+                entity.Property(e => e.ShowOnCalendar).IsRequired();
+                entity.Property(e => e.ShowOnTimeline).IsRequired();
+
+                entity.HasOne(e => e.Excercise).WithMany(p => p.LocationEvents).HasForeignKey(t => t.ExerciseId).OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK_LocationEvent_Excercise");
+                entity.HasOne(e => e.Location).WithMany(p => p.LocationEvents).HasForeignKey(t => t.LocationId).OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK_LocationEvent_Location");
+
             });
 
             modelBuilder.Entity<LocationFile>(entity =>
@@ -452,42 +497,6 @@ namespace SocomTrainingPlatform.Models
                     .HasConstraintName("FK_LocationUsageDates_Location");
             });
 
-            modelBuilder.Entity<Meeting>(entity =>
-            {
-                entity.ToTable("Meeting");
-
-                entity.Property(e => e.Description).HasMaxLength(250);
-
-                entity.Property(e => e.Grid).HasMaxLength(50);
-
-                entity.Property(e => e.Name)
-                    .IsRequired()
-                    .HasMaxLength(50);
-
-                entity.Property(e => e.Type).HasMaxLength(50);
-
-                entity.HasOne(d => d.Location)
-                    .WithMany(p => p.Meetings)
-                    .HasForeignKey(d => d.LocationId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Meeting_Location");
-            });
-
-            modelBuilder.Entity<MeetingImage>(entity =>
-            {
-                entity.ToTable("MeetingImage");
-
-                entity.Property(e => e.Description).HasMaxLength(250);
-
-                entity.Property(e => e.ImageFile).IsRequired();
-
-                entity.HasOne(d => d.Meeting)
-                    .WithMany(p => p.MeetingImages)
-                    .HasForeignKey(d => d.MeetingId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_MeetingImage_Meeting");
-            });
-
             modelBuilder.Entity<Mou>(entity =>
             {
                 entity.ToTable("Mou");
@@ -513,6 +522,25 @@ namespace SocomTrainingPlatform.Models
                 entity.Property(e => e.lastName)
                     .HasMaxLength(20)
                     .IsFixedLength(true);
+            });
+
+            modelBuilder.Entity<MouExcercise>(entity =>
+            {
+                entity.HasKey(l => new { l.MouId, l.ExcerciseId });
+
+                entity.ToTable("MouExcercise");
+
+                entity.HasOne(d => d.Mou)
+                    .WithMany()
+                    .HasForeignKey(d => d.MouId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_MouExcercise_Mou");
+
+                entity.HasOne(d => d.Excercise)
+                    .WithMany()
+                    .HasForeignKey(d => d.ExcerciseId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_MouExcercise_Excercise");
             });
 
             modelBuilder.Entity<Organization>(entity =>
@@ -575,6 +603,26 @@ namespace SocomTrainingPlatform.Models
                     .HasConstraintName("FK_PointOfContact_PocOrganization");
             });
 
+            modelBuilder.Entity<SiteField>(entity =>
+            {
+                entity.ToTable("SiteField");
+
+                entity.Property(e => e.Name).HasMaxLength(150);
+
+                entity.Property(e => e.Type).HasMaxLength(50);
+
+                entity.Property(e => e.Field).HasMaxLength(50);
+
+                entity.Property(e => e.Description).HasMaxLength(250);
+
+                entity.Property(e => e.Grid).HasMaxLength(50);
+
+                entity.HasOne(e => e.Location)
+                      .WithMany(p => p.SiteFields)
+                      .HasForeignKey(d => d.LocationId)
+                      .HasConstraintName("FK_SiteFields_Location");
+            });
+
             modelBuilder.Entity<SubOrganization>(entity =>
             {
                 entity.ToTable("SubOrganization");
@@ -588,27 +636,6 @@ namespace SocomTrainingPlatform.Models
                     .HasForeignKey(d => d.OrgId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_SubOrganization_Organization");
-            });
-
-            modelBuilder.Entity<Support>(entity =>
-            {
-                entity.ToTable("Support");
-
-                entity.Property(e => e.Description).HasMaxLength(250);
-
-                entity.Property(e => e.Grid).HasMaxLength(50);
-
-                entity.Property(e => e.Name)
-                    .IsRequired()
-                    .HasMaxLength(50);
-
-                entity.Property(e => e.Type).HasMaxLength(50);
-
-                entity.HasOne(d => d.Location)
-                    .WithMany(p => p.Supports)
-                    .HasForeignKey(d => d.LocationId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Support_Location");
             });
 
             modelBuilder.Entity<SupportDocument>(entity =>
@@ -628,57 +655,6 @@ namespace SocomTrainingPlatform.Models
                     .HasForeignKey(d => d.ExcerciseId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_SupportDocument_Excercise");
-            });
-
-            modelBuilder.Entity<SupportImage>(entity =>
-            {
-                entity.ToTable("SupportImage");
-
-                entity.Property(e => e.Description).HasMaxLength(250);
-
-                entity.Property(e => e.Image).IsRequired();
-
-                entity.HasOne(d => d.Support)
-                    .WithMany(p => p.SupportImages)
-                    .HasForeignKey(d => d.SupportId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_SupportImage_Support");
-            });
-
-            modelBuilder.Entity<Target>(entity =>
-            {
-                entity.ToTable("Target");
-
-                entity.Property(e => e.Description).HasMaxLength(250);
-
-                entity.Property(e => e.Grid).HasMaxLength(50);
-
-                entity.Property(e => e.Name)
-                    .IsRequired()
-                    .HasMaxLength(50);
-
-                entity.Property(e => e.Type).HasMaxLength(50);
-
-                entity.HasOne(d => d.Location)
-                    .WithMany(p => p.Targets)
-                    .HasForeignKey(d => d.LocationId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Target_Location");
-            });
-
-            modelBuilder.Entity<TargetImage>(entity =>
-            {
-                entity.ToTable("TargetImage");
-
-                entity.Property(e => e.Description).HasMaxLength(250);
-
-                entity.Property(e => e.ImageFile).IsRequired();
-
-                entity.HasOne(d => d.Target)
-                    .WithMany(p => p.TargetImages)
-                    .HasForeignKey(d => d.TargetId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_TargetImage_Target");
             });
 
             modelBuilder.Entity<TrainingArea>(entity =>
